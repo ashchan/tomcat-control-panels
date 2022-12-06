@@ -31,7 +31,7 @@ The size of the original AN/ARC-159(V) is **5.75** inch in width and **4.875** i
 |   2   | Tune                 | Push Button 0          |         BTN10         |                          |
 |   3   | Load                 | Push Button 1          |         BTN11         |                          |
 |  4/A6 | VOL                  | Potentiometer 0        | Axis0/X, BTN21, BTN22 | BTNs for Rotate CW/CCW   |
-|   5   | SQL                  | On-Off Toggle Switch 0 |         BTN12         |                          |
+|   5   | SQL                  | On-Off Toggle Switch 0 |         BTN12, BTN25  | Off needed as well       |
 |  6/A7 | BRT                  | Potentiometer 1        | Axis1/Y, BTN23, BTN24 | BTNs for Rotate CW/CCW   |
 |   7   | Read                 | (On)-Off Switch 0      |         BTN13         |                          |
 |  8/A8 | Mode Selector        | Rotary Switch 0        |      BTN14-BTN16      | 3 Pos, voltage divider   |
