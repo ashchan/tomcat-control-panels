@@ -22,6 +22,25 @@ The size of the original AN/ARC-159(V) is **5.75** inch in width and **4.875** i
 
 ![Panel Design](assets/design.png)
 
+## Pro Micro PINs Usage
+
+|  PIN  | ARC-159 Function     | Button/Switch          |  Joystick Button/Axis | Note                     |
+|:-----:|----------------------|------------------------|:---------------------:|--------------------------|
+| 0/RX1 | Chan Sel             | Rotary Encoder 0 CLK   |          BTN8         | Rotate CW                |
+| 1/TX0 | Chan Sel             | Rotary Encoder 0 DT    |          BTN9         | Rotate CCW               |
+|   2   | Tune                 | Push Button 0          |         BTN10         |                          |
+|   3   | Load                 | Push Button 1          |         BTN11         |                          |
+|  4/A6 | VOL                  | Potentiometer 0        | Axis0/X, BTN21, BTN22 | BTNs for Rotate CW/CCW   |
+|   5   | SQL                  | On-Off Toggle Switch 0 |         BTN12         |                          |
+|  6/A7 | BRT                  | Potentiometer 1        | Axis1/Y, BTN23, BTN24 | BTNs for Rotate CW/CCW   |
+|   7   | Read                 | (On)-Off Switch 0      |         BTN13         |                          |
+|  8/A8 | Mode Selector        | Rotary Switch 0        |      BTN14-BTN16      | 3 Pos, voltage divider   |
+|  9/A9 | Function Selector    | Rotary Switch 1        |      BTN17-BTN20      | 4 Pos, voltage divider   |
+|   A0  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 |       BTN0, BTN1      | Up/Down, voltage divider |
+|   A1  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 |       BTN2, BTN3      | ..                       |
+|   A2  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 |       BTN4, BTN5      | ..                       |
+|   A3  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 |       BTN6, BTN7      | ..                       |
+
 ## DCS-BIOS / HID Hybrid
 
 This radio control panel works in DCS-BIOS/HID Hybrid mode.
@@ -36,6 +55,7 @@ it can be used anywhere, as it's recognized as an HID joystick in Windows thanks
 * Flightpanels [DCS-BIOS Arduino Library](https://github.com/DCSFlightpanels/dcs-bios-arduino-library)
 * [LedControl](https://github.com/wayoda/LedControl)
 * [ArduinoJoystickLibrary](https://github.com/MHeironimus/ArduinoJoystickLibrary)
+* [NewEncoder](https://github.com/gfvalvo/NewEncoder)
 
 ## License
 
