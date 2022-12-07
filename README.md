@@ -24,7 +24,7 @@ The size of the original AN/ARC-159(V) is **5.75** inch in width and **4.875** i
 
 ## Pro Micro PINs Usage
 
-Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. This radio control panel will have 26 Joystick buttons and 2 axes. To connect them all without shift register, I'll use resistors to add simple voltage dividers to these:
+Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. This radio control panel will have 26 Joystick buttons and 2 axes as inputs, and 1 MAX7219 LED as output. To connect them all without shift register, I'll use resistors to add simple voltage dividers to these:
 
 * Freq (On)-Off-(On) Switches: use a single analog PIN instead of 2 digital PINs.
 * Mode and Function Selector Rotary Switches: use a single analog PIN instead of 3 or 4 digital PINs.
@@ -41,7 +41,7 @@ Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. Thi
 |   7   | Read                 | (On)-Off Switch 0      |         BTN14         |                           |
 |  8/A8 | Mode Selector        | Rotary Switch 0        |      BTN15-BTN17      | 3 Pos, voltage divider    |
 |  9/A9 | Function Selector    | Rotary Switch 1        |      BTN18-BTN21      | 4 Pos, voltage divider    |
-|   10  | ❌                   | Rotary Encoder 0 SW    |         BTN26         | Misc button (Reset?)   *3 |
+|   10  | ❌                   | Rotary Encoder 0 SW    |         BTN26         | Misc button *3            |
 |   A0  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 |       BTN0, BTN1      | Up/Down, voltage divider  |
 |   A1  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 |       BTN2, BTN3      | ″                         |
 |   A2  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 |       BTN4, BTN5      | ″                         |
@@ -52,7 +52,7 @@ Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. Thi
 
 * *1: DCS needs separate keybinds for On and Off. For F-14B ARC-159 Squelch, it has `Squelch SQL`, `Squelch OFF` and `Squelch Toggle`. The first two will be used.
 * *2: DCS doesn't have axis binding for `VOL`/`BRT` knobs; Create two buttons for `CW`/`CCW` similar to rotary encoder.
-* *3: Radio Panel doesn't have a center push button on the CHAN SEL knob; Create one button for the rotary encoder could be useful, say, reset the panel to initial state.
+* *3: F-14B Radio Panel doesn't have a center push button on the CHAN SEL knob; Creating one for rotary encoder's button could be useful, say, to reset the panel to initial state.
 
 ## DCS-BIOS / HID Hybrid
 
