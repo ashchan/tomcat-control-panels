@@ -18,7 +18,7 @@ This is how the AN/ARC-159 looks like in DCS F-14B:
 The size of the original AN/ARC-159(V) is **5.75** inch in width and **4.875** inch in height. I don't need the frequency chart to record preset channel frequencies, so that part is removed from my design to make the panel size smaller:
 
 * width: **5.75** (14.61cm)
-* height: **3.85** (9.78cm)
+* height: **3.75** (9.525cm)
 
 ![Panel Design](assets/design.png)
 
