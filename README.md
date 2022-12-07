@@ -41,11 +41,14 @@ Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. Thi
 |   7   | Read                 | (On)-Off Switch 0      |         BTN14         |                           |
 |  8/A8 | Mode Selector        | Rotary Switch 0        |      BTN15-BTN17      | 3 Pos, voltage divider    |
 |  9/A9 | Function Selector    | Rotary Switch 1        |      BTN18-BTN21      | 4 Pos, voltage divider    |
-|   10  | X                    | Rotary Encoder 0 SW    |         BTN26         | Misc button (Reset?)   *3 |
+|   10  | ❌                   | Rotary Encoder 0 SW    |         BTN26         | Misc button (Reset?)   *3 |
 |   A0  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 |       BTN0, BTN1      | Up/Down, voltage divider  |
 |   A1  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 |       BTN2, BTN3      | ″                         |
 |   A2  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 |       BTN4, BTN5      | ″                         |
 |   A3  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 |       BTN6, BTN7      | ″                         |
+|   14  | Freq LED             | MAX7219 LED CS         |           ❌          | DCS BIOS Output           |
+|   15  | Freq LED             | MAX7219 LED CLK        |           ❌          | ″                         |
+|   16  | Freq LED             | MAX7219 LED DIN        |           ❌          | ″                         |
 
 * *1: DCS needs separate keybinds for On and Off. For F-14B ARC-159 Squelch, it has `Squelch SQL`, `Squelch OFF` and `Squelch Toggle`. The first two will be used.
 * *2: DCS doesn't have axis binding for `VOL`/`BRT` knobs; Create two buttons for `CW`/`CCW` similar to rotary encoder.
