@@ -22,6 +22,14 @@ The size of the original AN/ARC-159(V) is **5.75** inch in width and **4.875** i
 
 ![Panel Design](assets/design.png)
 
+I design the panel using FreeCAD. It consists of three layers. The bottom and middle layers are composed and 3D printed as a single object.
+
+For the top layer I yet have to find a way to make it. Not owning a laser or CNC engraver, this needs more experiments and ideas.
+
+Note the hole diameters are determined by looking at switches, buttons and encoders I have. They are likely to not fit for others.
+
+![Panel CAD](assets/cad.png)
+
 ## Pro Micro PINs Usage
 
 Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. This radio control panel will have 26 Joystick buttons and 2 axes as inputs, and 1 MAX7219 LED as output. To connect them all without shift register, I'll use resistors to add simple voltage dividers to these:
