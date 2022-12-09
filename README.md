@@ -7,7 +7,7 @@ AN/ARC-159(V) 1 UHF Control Panel for DCS F-14B Tomcat. Built with Arduino-compa
 ## Parts
 
 * 5V/16MHz Pro Micro Board w/ ATmega32U4
-* MAX7219 7-segment LED
+* TM1637 6-Digit 7-Segment LED
 
 ## Design
 
@@ -32,7 +32,7 @@ Note the hole diameters are determined by looking at switches, buttons and encod
 
 ## Pro Micro PINs Usage
 
-Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. This radio control panel will have 26 Joystick buttons and 2 axes as inputs, and 1 MAX7219 LED as output. To connect them all without shift register, I'll use resistors to add simple voltage dividers to these:
+Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. This radio control panel will have 26 Joystick buttons and 2 axes as inputs, and 1 TM1637 LED as output. To connect them all without shift register, I'll use resistors to add simple voltage dividers to these:
 
 * Freq (On)-Off-(On) Switches: use a single analog PIN instead of 2 digital PINs.
 * Mode and Function Selector Rotary Switches: use a single analog PIN instead of 3 or 4 digital PINs.
@@ -54,9 +54,8 @@ Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. Thi
 |   A1  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 |       BTN2, BTN3      | ″                         |
 |   A2  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 |       BTN4, BTN5      | ″                         |
 |   A3  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 |       BTN6, BTN7      | ″                         |
-|   14  | Freq LED             | MAX7219 LED CS         |           ❌          | DCS BIOS Output           |
-|   15  | Freq LED             | MAX7219 LED CLK        |           ❌          | ″                         |
-|   16  | Freq LED             | MAX7219 LED DIN        |           ❌          | ″                         |
+|   14  | Freq LED             | TM1637 LED DIO         |           ❌          | DCS BIOS Output           |
+|   15  | Freq LED             | TM1637 LED CLK         |           ❌          | ″                         |
 
 * *1: DCS needs separate keybinds for On and Off. For F-14B ARC-159 Squelch, it has `Squelch SQL`, `Squelch OFF` and `Squelch Toggle`. The first two will be used.
 * *2: DCS doesn't have axis binding for `VOL`/`BRT` knobs; Create two buttons for `CW`/`CCW` similar to rotary encoder.
@@ -68,7 +67,7 @@ This radio control panel works in DCS-BIOS/HID Hybrid mode.
 
 1. Inputs: All switches, buttons and rotary encoders are mapped directly in DCS or other simulators. Although this panel is designed and modeled to look like ARC-159,
 it can be used anywhere, as it's recognized as an HID joystick in Windows thanks to the ATmega32U4 chip on Pro Micro.
-1. Outputs: The MAX7219 LED interfaces with DCS-BIOS to display DCS Radio channel or frequency based on mode. When in F-14B Rio seat, it will display the AN/ARC-182 info as well.
+1. Outputs: The TM1637 LED interfaces with DCS-BIOS to display DCS Radio channel or frequency based on mode. When in F-14B Rio seat, it will display the AN/ARC-182 info as well.
   * Will support some other DCS modules if possible.
 
 ## Arduino Libraries
