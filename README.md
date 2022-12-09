@@ -73,7 +73,7 @@ it can be used anywhere, as it's recognized as an HID joystick in Windows thanks
 ## Arduino Libraries
 
 * Flightpanels [DCS-BIOS Arduino Library](https://github.com/DCSFlightpanels/dcs-bios-arduino-library)
-* [LedControl](https://github.com/wayoda/LedControl)
+* [TM1637TinyDisplay](https://github.com/jasonacox/TM1637TinyDisplay)
 * [ArduinoJoystickLibrary](https://github.com/MHeironimus/ArduinoJoystickLibrary)
 * [NewEncoder](https://github.com/gfvalvo/NewEncoder)
 
