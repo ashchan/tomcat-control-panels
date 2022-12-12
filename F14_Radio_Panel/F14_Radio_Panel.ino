@@ -1,0 +1,115 @@
+#define DCSBIOS_DEFAULT_SERIAL
+
+#include <DcsBios.h>
+#include <TM1637TinyDisplay6.h>
+#include <Joystick.h>
+#include <NewEncoder.h>
+
+#define LED_DIO 14
+#define LED_CLK 15
+
+TM1637TinyDisplay6 led(LED_CLK, LED_DIO);
+Joystick_ joystick(0x07, JOYSTICK_TYPE_JOYSTICK, JOYSTICK_DEFAULT_BUTTON_COUNT,
+  0, true, true, false, false, false, false, false, false, false, false, false);
+
+//-----------------------------------------------------------------------------
+// F-14B
+void f14ShowFreq(char* value) {
+  if (value[3] == '.') {
+    float preq = (value[0] - '0') * 100 + (value[1] - '0') * 10 + (value[2] - '0') + (float)(value[4] - '0') * 0.1 + (float)(value[5] - '0') * 0.01 + (float)(value[6] - '0') * 0.001;
+    led.showNumber(preq);
+  } else {
+    int chal = String(value[3]).toInt() * 10 + value[4] - '0';
+    led.clear();
+    led.showNumber(chal, false, chal > 9 ? 2 : 1, chal > 9 ? 3 : 4);
+  }
+}
+
+void onF14PltUhf1BrightnessChange(unsigned int newValue) {
+  int brightness = map(newValue, 0, 65535, BRIGHT_0 - 1, BRIGHT_7);
+  led.setBrightness(brightness, brightness >= BRIGHT_0);
+}
+DcsBios::IntegerBuffer pltUhf1BrightnessBuffer(0x1246, 0xffff, 0, onF14PltUhf1BrightnessChange);
+
+void onF14PltUhfRemoteDispChange(char* newValue) {
+  f14ShowFreq(newValue);
+}
+DcsBios::StringBuffer<7> pltUhfRemoteDispBuffer(0x1472, onF14PltUhfRemoteDispChange);
+
+//-----------------------------------------------------------------------------
+// F-5E
+int f5FreqSel[5]  = {0, 0, 0, 0, 0};
+int f5FreqMode    = 0; // 0/1/2: MANUAL/PRESET/GUARD
+int f5Chal        = 1;
+
+void f5ShowFreq() {
+  if (f5FreqMode == 0) {
+    float value = f5FreqSel[0] * 100 + f5FreqSel[1] * 10 + f5FreqSel[2] + f5FreqSel[3] * 0.1 + f5FreqSel[4] * 0.001;
+    led.showNumber(value);
+  } else if (f5FreqMode == 1) {
+    led.clear();
+    led.showNumber(f5Chal, false, f5Chal > 9 ? 2 : 1, f5Chal > 9 ? 3 : 4);
+  } else if (f5FreqMode == 2) {
+    led.showNumber(243.000);
+  }
+}
+
+void onF5Uhf100mhzSelChange(unsigned int newValue) {
+  f5FreqSel[0] = 4 - newValue;
+  f5ShowFreq();
+}
+DcsBios::IntegerBuffer uhf100mhzSelBuffer(0x76f6, 0x0060, 5, onF5Uhf100mhzSelChange);
+
+void onF5Uhf10mhzSelChange(unsigned int newValue) {
+  f5FreqSel[1] = 10 - newValue;
+  f5ShowFreq();
+}
+DcsBios::IntegerBuffer uhf10mhzSelBuffer(0x76f6, 0x0780, 7, onF5Uhf10mhzSelChange);
+
+void onF5Uhf1mhzSelChange(unsigned int newValue) {
+  f5FreqSel[2] = 10 - newValue;
+  f5ShowFreq();
+}
+DcsBios::IntegerBuffer uhf1mhzSelBuffer(0x76f6, 0x7800, 11, onF5Uhf1mhzSelChange);
+
+void onF5Uhf01mhzSelChange(unsigned int newValue) {
+  f5FreqSel[3] = 10 - newValue;
+  f5ShowFreq();
+}
+DcsBios::IntegerBuffer uhf01mhzSelBuffer(0x76fa, 0x000f, 0, onF5Uhf01mhzSelChange);
+
+void onF5Uhf0025mhzSelChange(unsigned int newValue) {
+  f5FreqSel[4] = (4 - newValue) * 25;
+  f5ShowFreq();
+}
+DcsBios::IntegerBuffer uhf0025mhzSelBuffer(0x76fa, 0x0070, 4, onF5Uhf0025mhzSelChange);
+
+void onF5UhfPresetSelChange(unsigned int newValue) {
+  f5Chal = newValue + 1;
+  f5ShowFreq();
+}
+DcsBios::IntegerBuffer uhfPresetSelBuffer(0x76f6, 0x001f, 0, onF5UhfPresetSelChange);
+
+void onF5UhfFreqChange(unsigned int newValue) {
+  f5FreqMode = newValue;
+  f5ShowFreq();
+}
+DcsBios::IntegerBuffer uhfFreqBuffer(0x768e, 0x6000, 13, onF5UhfFreqChange);
+
+//-----------------------------------------------------------------------------
+// Main loop
+void setup() {
+  DcsBios::setup();
+  joystick.begin();
+  Serial.begin(9600);
+
+  led.setBrightness(BRIGHT_3);
+  led.clear();
+  led.showString("-");
+}
+
+void loop() {
+  DcsBios::loop();
+
+  delay(40);
+}
