@@ -27,10 +27,10 @@ Joystick_ joystick(0x07, JOYSTICK_TYPE_JOYSTICK, JOYSTICK_DEFAULT_BUTTON_COUNT,
 // PINs 0 - 10 state, PIN #1, #2 are not used as CHAN SEL Encoder has more friendly methods
 int lastControlState[11] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
-void handleSimpleButton(int pin, int joystickButton) {
+void handleSimpleButton(int pin, int joystickButton, bool revertValue = false) {
   int state = digitalRead(pin);
   if (state != lastControlState[pin]) {
-    joystick.setButton(joystickButton, state == LOW ? 1 : 0);
+    joystick.setButton(joystickButton, state == (revertValue ? HIGH : LOW) ? 1 : 0);
     lastControlState[pin] = state;
   }
 }
@@ -169,8 +169,8 @@ void loop() {
     joystick.releaseButton(9);
   }
 
-  handleSimpleButton(TUNE, 10);
-  handleSimpleButton(LOAD, 11);
+  handleSimpleButton(TUNE, 10, true);
+  handleSimpleButton(LOAD, 11, true);
 
   if (lastControlState[VOL] != analogRead(VOL)) {
   // TODO: VOL
