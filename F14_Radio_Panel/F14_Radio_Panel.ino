@@ -35,6 +35,15 @@ void handleSimpleButton(int pin, int joystickButton, bool revertValue = false) {
   }
 }
 
+void handleRotarySwitch(int pin, int positions, int joystickButtonStart) {
+  int state = (1023 - analogRead(pin)) / (1024 / positions + 1);
+  if (state != lastControlState[pin]) {
+    joystick.releaseButton(joystickButtonStart + lastControlState[pin]);
+    joystick.pressButton(joystickButtonStart + state);
+    lastControlState[pin] = state;
+  }
+}
+
 // A0 - A3, 4 frequency toggle switches
 #define FREQ_SWITCH_PIN_1 A0
 #define FREQ_SWITCH_STATE_UP    1
@@ -192,15 +201,8 @@ void loop() {
   }
 
   handleSimpleButton(READ, 14);
-
-  if (lastControlState[MODE_SEL] != analogRead(MODE_SEL)) {
-  // TODO: MODE_SEL
-  }
-
-  if (lastControlState[FUNC_SEL] != analogRead(FUNC_SEL)) {
-  // TODO: MODE_SEL
-  }
-
+  handleRotarySwitch(MODE_SEL, 3, 15);
+  handleRotarySwitch(FUNC_SEL, 4, 18);
   handleSimpleButton(MISC, 26);
 
   // A0 - A3
