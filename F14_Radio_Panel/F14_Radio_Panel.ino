@@ -9,12 +9,16 @@
 #define CHAN_SEL_DT 1
 #define TUNE 2
 #define LOAD 3
-#define VOL 4 // A6
+#define VOL A6
+#define VOL_INDEX 4
 #define SQL 5
-#define BRT 6 // A7
+#define BRT A7
+#define BRT_INDEX 6
 #define READ 7
-#define MODE_SEL 8 // A8
-#define FUNC_SEL 9 // A9
+#define MODE_SEL A8
+#define MODE_SEL_INDEX 8
+#define FUNC_SEL A9
+#define FUNC_SEL_INDEX 9
 #define MISC 10
 #define LED_DIO 14
 #define LED_CLK 15
@@ -26,6 +30,14 @@ Joystick_ joystick(0x07, JOYSTICK_TYPE_JOYSTICK, JOYSTICK_DEFAULT_BUTTON_COUNT,
 
 // PINs 0 - 10 state, PIN #1, #2 are not used as CHAN SEL Encoder has more friendly methods
 int lastControlState[11] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+int lastVolPulse = -1;
+int lastBrtPulse = -1;
+// A0 - A3, 4 frequency toggle switches
+#define FREQ_SWITCH_PIN_1 A0
+#define FREQ_SWITCH_STATE_UP    1
+#define FREQ_SWITCH_STATE_OFF   2
+#define FREQ_SWITCH_STATE_DOWN  3
+int lastFreqSwitchState[4] = {FREQ_SWITCH_STATE_OFF, FREQ_SWITCH_STATE_OFF, FREQ_SWITCH_STATE_OFF, FREQ_SWITCH_STATE_OFF};
 
 void handleSimpleButton(int pin, int joystickButton, bool revertValue = false) {
   int state = digitalRead(pin);
@@ -35,21 +47,14 @@ void handleSimpleButton(int pin, int joystickButton, bool revertValue = false) {
   }
 }
 
-void handleRotarySwitch(int pin, int positions, int joystickButtonStart) {
+void handleRotarySwitch(int pin, int stateIndex, int positions, int joystickButtonStart) {
   int state = (1023 - analogRead(pin)) / (1024 / positions + 1);
-  if (state != lastControlState[pin]) {
-    joystick.releaseButton(joystickButtonStart + lastControlState[pin]);
+  if (state != lastControlState[stateIndex]) {
+    joystick.releaseButton(joystickButtonStart + lastControlState[stateIndex]);
     joystick.pressButton(joystickButtonStart + state);
-    lastControlState[pin] = state;
+    lastControlState[stateIndex] = state;
   }
 }
-
-// A0 - A3, 4 frequency toggle switches
-#define FREQ_SWITCH_PIN_1 A0
-#define FREQ_SWITCH_STATE_UP    1
-#define FREQ_SWITCH_STATE_OFF   2
-#define FREQ_SWITCH_STATE_DOWN  3
-int lastFreqSwitchState[4] = {FREQ_SWITCH_STATE_OFF, FREQ_SWITCH_STATE_OFF, FREQ_SWITCH_STATE_OFF, FREQ_SWITCH_STATE_OFF};
 
 int freqSwitchState(int value) {
   if (value < 100) {
@@ -181,8 +186,21 @@ void loop() {
   handleSimpleButton(TUNE, 10, true);
   handleSimpleButton(LOAD, 11, true);
 
-  if (lastControlState[VOL] != analogRead(VOL)) {
-  // TODO: VOL
+  int vol = analogRead(VOL);
+  if (vol != lastControlState[VOL_INDEX]) {
+    joystick.setXAxis(vol);
+    int pulse = map(vol, 0, 1023, 0, 20);
+    if (pulse > lastVolPulse) {
+      joystick.pressButton(22);
+      delay(50);
+      joystick.releaseButton(22);
+    } else if (pulse < lastVolPulse) {
+      joystick.pressButton(23);
+      delay(50);
+      joystick.releaseButton(23);
+    }
+    lastVolPulse = pulse;
+    lastControlState[VOL_INDEX] = vol;
   }
 
   if (lastControlState[SQL] != digitalRead(SQL)) {
@@ -196,13 +214,26 @@ void loop() {
     lastControlState[SQL] = digitalRead(SQL);
   }
 
-  if (lastControlState[BRT] != analogRead(BRT)) {
-  // TODO: BRT
+  int brt = analogRead(BRT);
+  if (brt != lastControlState[BRT_INDEX]) {
+    joystick.setYAxis(brt);
+    int pulse = map(brt, 0, 1023, 0, 20);
+    if (pulse > lastBrtPulse) {
+      joystick.pressButton(24);
+      delay(50);
+      joystick.releaseButton(24);
+    } else if (pulse < lastBrtPulse) {
+      joystick.pressButton(25);
+      delay(50);
+      joystick.releaseButton(25);
+    }
+    lastBrtPulse = pulse;
+    lastControlState[BRT_INDEX] = brt;
   }
 
   handleSimpleButton(READ, 14);
-  handleRotarySwitch(MODE_SEL, 3, 15);
-  handleRotarySwitch(FUNC_SEL, 4, 18);
+  handleRotarySwitch(MODE_SEL, MODE_SEL_INDEX, 3, 15);
+  handleRotarySwitch(FUNC_SEL, FUNC_SEL_INDEX, 4, 18);
   handleSimpleButton(MISC, 26);
 
   // A0 - A3
