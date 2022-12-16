@@ -1,13 +1,19 @@
 # F-14B Tomcat ARC-159 Radio Panel
 
-*This is WIP!!*
-
-AN/ARC-159(V) 1 UHF Control Panel for DCS F-14B Tomcat. Built with Arduino-compatible microcontroller board Pro Micro, use with [DCS BIOS](https://github.com/dcs-bios/dcs-bios).
+AN/ARC-159(V) 1 UHF Control Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller board Pro Micro, use with [DCS BIOS](https://github.com/dcs-bios/dcs-bios).
 
 ## Parts
 
 * 5V/16MHz Pro Micro Board w/ ATmega32U4
 * TM1637 6-Digit 7-Segment LED
+* Mini toggle switches:
+  * 4 (on)-off-(on) for freqency dials
+  * 1 on-off for SQL
+  * 1 (on)-off for READ
+* 2 potentiometers for VOL and BRT
+* 1 rotary encoder for preset channel selector
+* 2 rotary switches for mode selector and function selector
+* 2 push buttons for TUNE and LOAD
 
 ## Design
 
