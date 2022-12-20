@@ -23,6 +23,8 @@
 #define LED_DIO 14
 #define LED_CLK 15
 
+const int POT_THRESHOLD = 2;
+
 NewEncoder chanSelEncoder(CHAN_SEL_CLK, CHAN_SEL_DT, -20, 20, 0, FULL_PULSE);
 TM1637TinyDisplay6 led(LED_CLK, LED_DIO);
 Joystick_ joystick(0x07, JOYSTICK_TYPE_JOYSTICK, JOYSTICK_DEFAULT_BUTTON_COUNT,
@@ -30,6 +32,9 @@ Joystick_ joystick(0x07, JOYSTICK_TYPE_JOYSTICK, JOYSTICK_DEFAULT_BUTTON_COUNT,
 
 // PINs 0 - 10 state, PIN #1, #2 are not used as CHAN SEL Encoder has more friendly methods
 int lastControlState[11] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+bool isChanSelTurning = false;
+bool isVolTurning = false;
+bool isBrtTurning = false;
 // A0 - A3, 4 frequency toggle switches
 #define FREQ_SWITCH_PIN_1 A0
 #define FREQ_SWITCH_STATE_UP    1
@@ -173,28 +178,37 @@ void loop() {
 
   if (chanSelEncoder.upClick()) {
     joystick.pressButton(8);
+    isChanSelTurning = true;
   } else if (chanSelEncoder.downClick()) {
     joystick.pressButton(9);
-  } else {
+    isChanSelTurning = true;
+  } else if (isChanSelTurning) {
     joystick.releaseButton(8);
     joystick.releaseButton(9);
+    isChanSelTurning = false;
   }
 
   handleSimpleButton(TUNE, 10, true);
   handleSimpleButton(LOAD, 11, true);
 
   int vol = analogRead(VOL);
-  joystick.setXAxis(vol);
-  int volPulse = map(vol, 0, 1023, 0, 20);
-  if (volPulse > lastControlState[VOL_INDEX]) {
-    joystick.pressButton(22);
-  } else if (volPulse < lastControlState[VOL_INDEX]) {
-    joystick.pressButton(23);
-  } else {
+  if (abs(vol - lastControlState[VOL_INDEX]) > POT_THRESHOLD) {
+    joystick.setXAxis(vol);
+    int lastPulse = map(lastControlState[VOL_INDEX], 0, 1023, 0, 20);
+    int pulse = map(vol, 0, 1023, 0, 20);
+    if (pulse > lastPulse) {
+      joystick.pressButton(22);
+      isVolTurning = true;
+    } else if (pulse < lastPulse) {
+      joystick.pressButton(23);
+      isVolTurning = true;
+    }
+    lastControlState[VOL_INDEX] = vol;
+  } else if (isVolTurning) {
     joystick.releaseButton(22);
     joystick.releaseButton(23);
+    isVolTurning = false;
   }
-  lastControlState[VOL_INDEX] = volPulse;
 
   if (lastControlState[SQL] != digitalRead(SQL)) {
     if (digitalRead(SQL) == LOW) {
@@ -208,17 +222,23 @@ void loop() {
   }
 
   int brt = analogRead(BRT);
-  joystick.setYAxis(brt);
-  int brtPulse = map(brt, 0, 1023, 0, 20);
-  if (brtPulse > lastControlState[BRT_INDEX]) {
-    joystick.pressButton(24);
-  } else if (brtPulse < lastControlState[BRT_INDEX]) {
-    joystick.pressButton(25);
-  } else {
+  if (abs(brt - lastControlState[BRT_INDEX]) > POT_THRESHOLD) {
+    joystick.setYAxis(brt);
+    int lastPulse = map(lastControlState[BRT_INDEX], 0, 1023, 0, 20);
+    int pulse = map(brt, 0, 1023, 0, 20);
+    if (pulse > lastPulse) {
+      joystick.pressButton(24);
+      isBrtTurning = true;
+    } else if (pulse < lastPulse) {
+      joystick.pressButton(25);
+      isBrtTurning = true;
+    }
+    lastControlState[BRT_INDEX] = brt;
+  } else if (isBrtTurning) {
     joystick.releaseButton(24);
     joystick.releaseButton(25);
+    isBrtTurning = false;
   }
-  lastControlState[BRT_INDEX] = brtPulse;
 
   handleSimpleButton(READ, 14);
   handleRotarySwitch(MODE_SEL, MODE_SEL_INDEX, 3, 15);
