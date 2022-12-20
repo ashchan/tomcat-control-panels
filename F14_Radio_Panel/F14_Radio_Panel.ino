@@ -30,8 +30,6 @@ Joystick_ joystick(0x07, JOYSTICK_TYPE_JOYSTICK, JOYSTICK_DEFAULT_BUTTON_COUNT,
 
 // PINs 0 - 10 state, PIN #1, #2 are not used as CHAN SEL Encoder has more friendly methods
 int lastControlState[11] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-int lastVolPulse = -1;
-int lastBrtPulse = -1;
 // A0 - A3, 4 frequency toggle switches
 #define FREQ_SWITCH_PIN_1 A0
 #define FREQ_SWITCH_STATE_UP    1
@@ -175,11 +173,10 @@ void loop() {
 
   if (chanSelEncoder.upClick()) {
     joystick.pressButton(8);
-    delay(50);
-    joystick.releaseButton(8);
   } else if (chanSelEncoder.downClick()) {
     joystick.pressButton(9);
-    delay(50);
+  } else {
+    joystick.releaseButton(8);
     joystick.releaseButton(9);
   }
 
@@ -187,21 +184,17 @@ void loop() {
   handleSimpleButton(LOAD, 11, true);
 
   int vol = analogRead(VOL);
-  if (vol != lastControlState[VOL_INDEX]) {
-    joystick.setXAxis(vol);
-    int pulse = map(vol, 0, 1023, 0, 20);
-    if (pulse > lastVolPulse) {
-      joystick.pressButton(22);
-      delay(50);
-      joystick.releaseButton(22);
-    } else if (pulse < lastVolPulse) {
-      joystick.pressButton(23);
-      delay(50);
-      joystick.releaseButton(23);
-    }
-    lastVolPulse = pulse;
-    lastControlState[VOL_INDEX] = vol;
+  joystick.setXAxis(vol);
+  int volPulse = map(vol, 0, 1023, 0, 20);
+  if (volPulse > lastControlState[VOL_INDEX]) {
+    joystick.pressButton(22);
+  } else if (volPulse < lastControlState[VOL_INDEX]) {
+    joystick.pressButton(23);
+  } else {
+    joystick.releaseButton(22);
+    joystick.releaseButton(23);
   }
+  lastControlState[VOL_INDEX] = volPulse;
 
   if (lastControlState[SQL] != digitalRead(SQL)) {
     if (digitalRead(SQL) == LOW) {
@@ -215,21 +208,17 @@ void loop() {
   }
 
   int brt = analogRead(BRT);
-  if (brt != lastControlState[BRT_INDEX]) {
-    joystick.setYAxis(brt);
-    int pulse = map(brt, 0, 1023, 0, 20);
-    if (pulse > lastBrtPulse) {
-      joystick.pressButton(24);
-      delay(50);
-      joystick.releaseButton(24);
-    } else if (pulse < lastBrtPulse) {
-      joystick.pressButton(25);
-      delay(50);
-      joystick.releaseButton(25);
-    }
-    lastBrtPulse = pulse;
-    lastControlState[BRT_INDEX] = brt;
+  joystick.setYAxis(brt);
+  int brtPulse = map(brt, 0, 1023, 0, 20);
+  if (brtPulse > lastControlState[BRT_INDEX]) {
+    joystick.pressButton(24);
+  } else if (brtPulse < lastControlState[BRT_INDEX]) {
+    joystick.pressButton(25);
+  } else {
+    joystick.releaseButton(24);
+    joystick.releaseButton(25);
   }
+  lastControlState[BRT_INDEX] = brtPulse;
 
   handleSimpleButton(READ, 14);
   handleRotarySwitch(MODE_SEL, MODE_SEL_INDEX, 3, 15);
