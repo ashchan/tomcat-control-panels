@@ -73,8 +73,10 @@ This radio control panel works in DCS-BIOS/HID Hybrid mode.
 
 1. Inputs: All switches, buttons and rotary encoders are mapped directly in DCS or other simulators. Although this panel is designed and modeled to look like ARC-159,
 it can be used anywhere, as it's recognized as an HID joystick in Windows thanks to the ATmega32U4 chip on Pro Micro.
-1. Outputs: The TM1637 LED interfaces with DCS-BIOS to display DCS Radio channel or frequency based on mode. When in F-14B Rio seat, it will display the AN/ARC-182 info as well.
-  * Will support some other DCS modules if possible.
+1. Outputs: The TM1637 LED interfaces with DCS-BIOS to display DCS Radio channel or frequency based on mode. When in F-14B Rio seat, it will display the AN/ARC-182 info as well. Currently these modules are supported:
+  * F-14B Front Seat
+  * F-14B Back Seat (RIO)
+  * F-5E
 
 ## Arduino Libraries
 
