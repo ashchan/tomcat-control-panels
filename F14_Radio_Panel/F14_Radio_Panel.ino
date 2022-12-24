@@ -23,7 +23,7 @@
 #define LED_DIO 14
 #define LED_CLK 15
 
-const int POT_THRESHOLD = 2;
+const int POT_THRESHOLD = 3;
 
 NewEncoder chanSelEncoder(CHAN_SEL_CLK, CHAN_SEL_DT, -20, 20, 0, FULL_PULSE);
 TM1637TinyDisplay6 led(LED_CLK, LED_DIO);
