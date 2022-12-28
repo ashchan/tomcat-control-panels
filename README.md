@@ -17,7 +17,7 @@ AN/ARC-159(V) 1 UHF Control Panel for DCS F-14B Tomcat. Built with Arduino compa
 
 ## Design
 
-This is how the AN/ARC-159 looks like in DCS F-14B:
+This is the final panel (AoA Indexer excluded):
 
 ![arc-159 in DCS](assets/arc-159.jpg)
 
@@ -29,8 +29,6 @@ The size of the original AN/ARC-159(V) is **5.75** inch in width and **4.875** i
 ![Panel Design](assets/design.png)
 
 I design the panel using FreeCAD. It consists of three layers. The bottom and middle layers are composed and 3D printed as a single object.
-
-For the top layer I yet have to find a way to make it. Not owning a laser or CNC engraver, this needs more experiments and ideas.
 
 Note the hole diameters are determined by looking at switches, buttons and encoders I have. They are likely to not fit for others.
 
