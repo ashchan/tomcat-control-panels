@@ -37,10 +37,21 @@ Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. Thi
 
 * TACAN Mode Selector and Channel Rotary Switches: use a single analog PIN for each switch.
 
-TBD
+| **PIN** | **TACAN Function** | **Button/Switch**          | **Joystick Button/Axis** | **Note**               |
+|:-------:|--------------------|----------------------------|:------------------------:|------------------------|
+| 0/RX1   | BIT                | Push Button 0              | BTN0                     |                        |
+| 1/TX0   | Freq Selector Tens | 8421C Rotary Encoder 0 - 1 | BTN10, BTN11             | BTNs for Rotate CW/CCW |
+| 2       | Freq Selector Tens | 8421C Rotary Encoder 0 - 2 |                          |                        |
+| 3       | Freq Selector Ones | Rotary Switch 0            | BTN12, BTN13             | BTNs for Rotate CW/CCW |
+| 4       | Freq Selector Tens | 8421C Rotary Encoder 0 - 4 |                          |                        |
+| 5       | Mode Switch        | On-Off Toggle Switch 0     | BTN1, BTN2               |                        |
+| 6/A7    | Vol                | Potentiometer 0            | Axis0/X, BTN14, BTN15    | BTNs for Rotate CW/CCW |
+| 7       | X/Y Freq Selector  | On-Off Toggle Switch 1     | BTN3, BTN4               |                        |
+| 8       | Freq Selector Tens | 8421C Rotary Encoder 0 - 8 |                          |                        |
+| 9/A9    | Function Selector  | Rotary Switch 1            | BTN5-BTN9                | 5 Pos, voltage divider |
+| 15      | BIT GO LED         | LED Green                  | ❌                       | DCS BIOS Output        |
+| 16      | BIT NO GO LED      | LED Yellow                 | ❌                       | DCS BIOS Output        |
 
-|  PIN  | TACAN Function       | Button/Switch          |  Joystick Button/Axis | Note                      |
-|:-----:|----------------------|------------------------|:---------------------:|---------------------------|
 
 ## Arduino Libraries
 
