@@ -2,7 +2,7 @@
 
 ## Design
 
-![AoA indexer](assets/aoa-indexer.jpg)
+![AoA indexer](assets/aoa.jpg)
 
 ![CAD](assets/cad.png)
 
