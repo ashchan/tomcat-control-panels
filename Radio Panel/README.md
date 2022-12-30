@@ -17,8 +17,7 @@ AN/ARC-159(V) 1 UHF Control Panel for DCS F-14B Tomcat. Built with Arduino compa
 
 ## Design
 
-This is the final panel (AoA Indexer excluded, for AoA Indexer design see [here](../AoA%20Indexer/README.md)).
-
+This is the final panel (AoA Indexer excluded, for AoA Indexer design see [here](../AoA%20Indexer)).
 
 ![arc-159 in DCS](assets/arc-159.jpg)
 
