@@ -42,7 +42,7 @@ Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. Thi
 | 0/RX1   | BIT                | Push Button 0              | BTN0                     |                        |
 | 1/TX0   | Freq Selector Tens | 8421C Rotary Encoder 0 - 1 | BTN10, BTN11             | BTNs for Rotate CW/CCW |
 | 2       | Freq Selector Tens | 8421C Rotary Encoder 0 - 2 |                          |                        |
-| 3       | Freq Selector Ones | Rotary Switch 0            | BTN12, BTN13             | BTNs for Rotate CW/CCW |
+| A3      | Freq Selector Ones | Rotary Switch 0            | BTN12, BTN13             | BTNs for Rotate CW/CCW |
 | 4       | Freq Selector Tens | 8421C Rotary Encoder 0 - 4 |                          |                        |
 | 5       | Mode Switch        | On-Off Toggle Switch 0     | BTN1, BTN2               |                        |
 | 6/A7    | Vol                | Potentiometer 0            | Axis0/X, BTN14, BTN15    | BTNs for Rotate CW/CCW |
