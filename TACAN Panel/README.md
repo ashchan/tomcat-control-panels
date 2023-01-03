@@ -8,9 +8,8 @@ TACAN Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller 
 * 2 5mm LED for BIT result (GO/NO GO lights)
 * 2 toggle switches for operation mode and channel (X/Y)
 * 1 push button for BIT
-* 1 potentiometer for VOL
-* 1 rotary switch(12 pos) for channel selector (ones)
-* 1 rotary encoder(0-F 16 pos, 8421C) for channel selector (tens)
+* 2 potentiometer for channel selector tens and VOL
+* 1 rotary switch(12 pos) for channel selector ones
 
 ## Design
 
@@ -40,18 +39,16 @@ Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. Thi
 | **PIN** | **TACAN Function** | **Button/Switch**          | **Joystick Button/Axis** | **Note**               |
 |:-------:|--------------------|----------------------------|:------------------------:|------------------------|
 | 0/RX1   | BIT                | Push Button 0              | BTN0                     |                        |
-| 1/TX0   | Freq Selector Tens | 8421C Rotary Encoder 0 - 1 | BTN10, BTN11             | BTNs for Rotate CW/CCW |
-| 2       | Freq Selector Tens | 8421C Rotary Encoder 0 - 2 |                          |                        |
-| A3      | Freq Selector Ones | Rotary Switch 0            | BTN12, BTN13             | BTNs for Rotate CW/CCW |
-| 4       | Freq Selector Tens | 8421C Rotary Encoder 0 - 4 |                          |                        |
-| 5       | Mode Switch        | On-Off Toggle Switch 0     | BTN1, BTN2               |                        |
-| 6/A7    | Vol                | Potentiometer 0            | Axis0/X, BTN14, BTN15    | BTNs for Rotate CW/CCW |
-| 7       | X/Y Freq Selector  | On-Off Toggle Switch 1     | BTN3, BTN4               |                        |
-| 8       | Freq Selector Tens | 8421C Rotary Encoder 0 - 8 |                          |                        |
-| 9/A9    | Function Selector  | Rotary Switch 1            | BTN5-BTN9                | 5 Pos, voltage divider |
+| 1/TX0   | Mode Switch        | On-Off Toggle Switch 0     | BTN1, BTN2               |                        |
+| 2       | X/Y Freq Selector  | On-Off Toggle Switch 1     | BTN3, BTN4               |                        |
+| A0      | Function Selector  | Rotary Switch 0            | BTN5-BTN9                | 5 Pos, voltage divider |
+| A1      | Freq Selector Tens | Potentiometer 0            | BTN10, BTN11             | BTNs for Rotate CW/CCW |
+| A2      | Freq Selector Ones | Rotary Switch 1            | BTN12, BTN13             | BTNs for Rotate CW/CCW |
+| A3      | Vol                | Potentiometer 1            | Axis0/X, BTN14, BTN15    | BTNs for Rotate CW/CCW |
+| A10     | CRS                | Potentiometer 2            | Axis1/Y, BTN16, BTN17    | Extended, not on panel |
+| 10      | TACAN CMD          | On-Off Toggle Switch 2     | BTN18, BTN19             | Extenced, not on panel |
 | 15      | BIT GO LED         | LED Green                  | ❌                       | DCS BIOS Output        |
 | 16      | BIT NO GO LED      | LED Yellow                 | ❌                       | DCS BIOS Output        |
-
 
 ## Arduino Libraries
 

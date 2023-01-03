@@ -62,6 +62,7 @@ void loop() {
   int tens1 = digitalRead(PIN_TENS_1);
   int tens = (tens8 << 3) + (tens4 << 2) + (tens2 << 1) + tens1;
   if (tens != tensState) {
+    // TODO: handle tensState == -1 initial state
     // TODO: remove debug print
     Serial.println(tens);
     if (tens > tensState) {
