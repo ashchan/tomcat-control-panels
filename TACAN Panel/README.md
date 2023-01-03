@@ -32,7 +32,7 @@ Note the hole diameters are determined by looking at switches, buttons and encod
 
 ## Pro Micro PINs Usage
 
-Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. This TACAN control panel will have TBD Joystick buttons and TBD axes as inputs.
+Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. This TACAN control panel will have about 20 Joystick buttons and 2 axes as inputs.
 
 * TACAN Mode Selector and Channel Rotary Switches: use a single analog PIN for each switch.
 
