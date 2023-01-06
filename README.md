@@ -2,7 +2,7 @@
 
 A few simpit control panels I build for DCS World Microsoft Flight Simulator.
 
-These control panels are built with Arduino compatible microcontroller board Pro Micro (5V/16MHz w/ ATmega32U4), and communicate to DCS with [DCS BIOS](https://github.com/dcs-bios/dcs-bios).
+These control panels are built with Arduino compatible microcontroller board Pro Micro (5V/16MHz w/ ATmega32U4), and communicate to DCS with [Flightpanel DCS-BIOS fork](https://github.com/DCSFlightpanels/dcs-bios).
 
 ### [AN/ARC-159(V) 1 UHF Control Panel](Radio%20Panel/)
 

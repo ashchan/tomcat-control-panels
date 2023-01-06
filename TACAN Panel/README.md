@@ -1,6 +1,6 @@
 # F-14B Tomcat TACAN Panel
 
-TACAN Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller board Pro Micro, use with [DCS BIOS](https://github.com/dcs-bios/dcs-bios).
+TACAN Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller board Pro Micro, use with [Flightpanel DCS-BIOS fork](https://github.com/DCSFlightpanels/dcs-bios).
 
 ## Parts
 
