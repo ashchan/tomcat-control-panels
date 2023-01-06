@@ -46,9 +46,11 @@ Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. Thi
 | A2      | Freq Selector Ones | Rotary Switch 1            | BTN12, BTN13             | BTNs for Rotate CW/CCW |
 | A3      | Vol                | Potentiometer 1            | Axis0/X, BTN14, BTN15    | BTNs for Rotate CW/CCW |
 | A9      | CRS                | Potentiometer 2            | Axis1/Y, BTN16, BTN17    | Extended, not on panel |
-| 10      | TACAN CMD          | On-Off Toggle Switch 2     | BTN18, BTN19             | Extenced, not on panel |
+| 10      | TACAN CMD          | Push Button 1              | BTN18                    | Extended, not on panel |
 | 15      | BIT GO LED         | LED Green                  | ❌                       | DCS BIOS Output        |
 | 16      | BIT NO GO LED      | LED Yellow                 | ❌                       | DCS BIOS Output        |
+| 7       | CMD Light PLT LED  | LED Green                  | ❌                       | DCS BIOS Output, extended, not on panel |
+| 8       | CMD Light NFO LED  | LED Green                  | ❌                       | DCS BIOS Output, extended, not on panel |
 
 ## Arduino Libraries
 

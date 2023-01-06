@@ -13,8 +13,10 @@
 #define PIN_CRS       A9
 #define PIN_CMD       10
 
-#define PIN_LED_GO    15
-#define PIN_LED_NOGO  16
+#define PIN_LED_CMD_PLT   7
+#define PIN_LED_CMD_NFO   8
+#define PIN_LED_GO        15
+#define PIN_LED_NOGO      16
 
 const int POT_THRESHOLD = 3;
 
@@ -35,8 +37,14 @@ int crsState = -1;
 bool isCrsTurning = false;
 int cmdState = -1;
 
+DcsBios::LED pltTacanComandPlt(0x12d2, 0x0800, PIN_LED_CMD_PLT);
+DcsBios::LED pltTacanComandNfo(0x12d2, 0x1000, PIN_LED_CMD_NFO);
+DcsBios::LED pltTacanBit(0x12d4, 0x0020, PIN_LED_GO);
+DcsBios::LED pltTacanNogo(0x12d4, 0x0040, PIN_LED_NOGO);
+
 void setup() {
   DcsBios::setup();
+
   Serial.begin(9600);
 
   pinMode(PIN_BIT, INPUT_PULLUP);
@@ -44,17 +52,11 @@ void setup() {
   pinMode(PIN_XY, INPUT_PULLUP);
   pinMode(PIN_CMD, INPUT_PULLUP);
 
-  pinMode(PIN_LED_GO, OUTPUT);
-  pinMode(PIN_LED_NOGO, OUTPUT);
-
   joystick.begin();
 }
 
 void loop() {
   DcsBios::loop();
-
-  digitalWrite(PIN_LED_GO, HIGH);
-  digitalWrite(PIN_LED_NOGO, HIGH);
 
   if (digitalRead(PIN_BIT) != bitState) {
     joystick.setButton(0, bitState == LOW ? 0 : 1);
@@ -141,7 +143,6 @@ void loop() {
     isVolTurning = false;
   }
 
-/*
   int crs = analogRead(PIN_CRS);
   if (abs(crs - crsState) > POT_THRESHOLD) {
     joystick.setYAxis(crs);
@@ -159,7 +160,7 @@ void loop() {
     joystick.releaseButton(16);
     joystick.releaseButton(17);
     isCrsTurning = false;
-  }*/
+  }
 
   if (digitalRead(PIN_CMD) != cmdState) {
     if (digitalRead(PIN_CMD) == HIGH) {
