@@ -35,6 +35,7 @@ int cmdState = LOW;
 
 Joystick_ joystick(0x08, JOYSTICK_TYPE_JOYSTICK, JOYSTICK_DEFAULT_BUTTON_COUNT,
   0, true, true, false, false, false, false, false, false, false, false, false);
+ResponsiveAnalogRead tensPot(PIN_TENS, true);
 ResponsiveAnalogRead volPot(PIN_VOL, true);
 ResponsiveAnalogRead crsPot(PIN_CRS, true);
 
@@ -58,6 +59,7 @@ void setup() {
 
 void loop() {
   DcsBios::loop();
+  tensPot.update();
   volPot.update();
   crsPot.update();
 
@@ -98,20 +100,23 @@ void loop() {
   }
 
   // TODO: handle initial tensState
-  int tens = (1023 - analogRead(PIN_TENS)) / (1024 / 13 + 1);
-  if (tens != tensState) {
-    if (tens > tensState) {
-      joystick.pressButton(10);
-    } else {
-      joystick.pressButton(11);
+  if (tensPot.hasChanged()) {  
+    int tens = (1023 - analogRead(PIN_TENS)) / (1024 / 13 + 1);
+    if (tens != tensState) {
+      if (tens > tensState) {
+        joystick.pressButton(10);
+      } else {
+        joystick.pressButton(11);
+      }
+      tensState = tens;
+      isTensTurning = true;
     }
-    tensState = tens;
-    isTensTurning = true;
   } else if (isTensTurning) {
     joystick.releaseButton(10);
     joystick.releaseButton(11);
     isTensTurning = false;
   }
+
 // TODO: handle initial onesState
   int ones = (1023 - analogRead(PIN_ONES)) / (1024 / 10 + 1);
   if (ones != onesState) {
