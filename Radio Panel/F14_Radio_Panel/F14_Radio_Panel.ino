@@ -3,6 +3,7 @@
 #include <DcsBios.h>
 #include <TM1637TinyDisplay6.h>
 #include <Joystick.h>
+#include <ResponsiveAnalogRead.h>
 #include <NewEncoder.h>
 
 #define CHAN_SEL_CLK 0
@@ -23,9 +24,9 @@
 #define LED_DIO 14
 #define LED_CLK 15
 
-const int POT_THRESHOLD = 3;
-
 NewEncoder chanSelEncoder(CHAN_SEL_CLK, CHAN_SEL_DT, -20, 20, 0, FULL_PULSE);
+ResponsiveAnalogRead volPot(VOL, true);
+ResponsiveAnalogRead brtPot(BRT, true);
 TM1637TinyDisplay6 led(LED_CLK, LED_DIO);
 Joystick_ joystick(0x07, JOYSTICK_TYPE_JOYSTICK, JOYSTICK_DEFAULT_BUTTON_COUNT,
   0, true, true, false, false, false, false, false, false, false, false, false);
@@ -186,6 +187,9 @@ void setup() {
 void loop() {
   DcsBios::loop();
 
+  volPot.update();
+  brtPot.update();
+
   if (chanSelEncoder.upClick()) {
     joystick.pressButton(8);
     isChanSelTurning = true;
@@ -201,8 +205,8 @@ void loop() {
   handleSimpleButton(TUNE, 10, true);
   handleSimpleButton(LOAD, 11, true);
 
-  int vol = analogRead(VOL);
-  if (abs(vol - lastControlState[VOL_INDEX]) > POT_THRESHOLD) {
+  if (volPot.hasChanged()) {
+    int vol = volPot.getValue();
     joystick.setXAxis(vol);
     int lastPulse = map(lastControlState[VOL_INDEX], 0, 1023, 0, 20);
     int pulse = map(vol, 0, 1023, 0, 20);
@@ -231,8 +235,8 @@ void loop() {
     lastControlState[SQL] = digitalRead(SQL);
   }
 
-  int brt = analogRead(BRT);
-  if (abs(brt - lastControlState[BRT_INDEX]) > POT_THRESHOLD) {
+  if (brtPot.hasChanged()) {
+    int brt = brtPot.getValue();
     joystick.setYAxis(brt);
     int lastPulse = map(lastControlState[BRT_INDEX], 0, 1023, 0, 20);
     int pulse = map(brt, 0, 1023, 0, 20);
