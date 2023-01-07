@@ -2,6 +2,7 @@
 
 #include <DcsBios.h>
 #include <Joystick.h>
+#include <ResponsiveAnalogRead.h>
 
 #define PIN_BIT       0
 #define PIN_MODE      1
@@ -18,11 +19,6 @@
 #define PIN_LED_GO        15
 #define PIN_LED_NOGO      16
 
-const int POT_THRESHOLD = 3;
-
-Joystick_ joystick(0x08, JOYSTICK_TYPE_JOYSTICK, JOYSTICK_DEFAULT_BUTTON_COUNT,
-  0, true, true, false, false, false, false, false, false, false, false, false);
-
 int bitState = LOW;
 int modeState = -1;
 int xyState = -1;
@@ -35,7 +31,12 @@ int volState = -1;
 bool isVolTurning = false;
 int crsState = -1;
 bool isCrsTurning = false;
-int cmdState = -1;
+int cmdState = LOW;
+
+Joystick_ joystick(0x08, JOYSTICK_TYPE_JOYSTICK, JOYSTICK_DEFAULT_BUTTON_COUNT,
+  0, true, true, false, false, false, false, false, false, false, false, false);
+ResponsiveAnalogRead volPot(PIN_VOL, true);
+ResponsiveAnalogRead crsPot(PIN_CRS, true);
 
 DcsBios::LED pltTacanComandPlt(0x12d2, 0x0800, PIN_LED_CMD_PLT);
 DcsBios::LED pltTacanComandNfo(0x12d2, 0x1000, PIN_LED_CMD_NFO);
@@ -57,6 +58,8 @@ void setup() {
 
 void loop() {
   DcsBios::loop();
+  volPot.update();
+  crsPot.update();
 
   if (digitalRead(PIN_BIT) != bitState) {
     joystick.setButton(0, bitState == LOW ? 0 : 1);
@@ -124,8 +127,8 @@ void loop() {
     joystick.releaseButton(13);
   }
 
-  int vol = analogRead(PIN_VOL);
-  if (abs(vol - volState) > POT_THRESHOLD) {
+  if (volPot.hasChanged()) {
+    int vol = volPot.getValue();
     joystick.setXAxis(vol);
     int lastPulse = map(volState, 0, 1023, 0, 20);
     int pulse = map(vol, 0, 1023, 0, 20);
@@ -143,8 +146,8 @@ void loop() {
     isVolTurning = false;
   }
 
-  int crs = analogRead(PIN_CRS);
-  if (abs(crs - crsState) > POT_THRESHOLD) {
+  if (crsPot.hasChanged()) {
+    int crs = crsPot.getValue();
     joystick.setYAxis(crs);
     int lastPulse = map(crsState, 0, 1023, 0, 20);
     int pulse = map(crs, 0, 1023, 0, 20);
@@ -163,13 +166,7 @@ void loop() {
   }
 
   if (digitalRead(PIN_CMD) != cmdState) {
-    if (digitalRead(PIN_CMD) == HIGH) {
-      joystick.setButton(18, 1);
-      joystick.setButton(19, 0);
-    } else {
-      joystick.setButton(18, 0);
-      joystick.setButton(19, 1);
-    }
+    joystick.setButton(18, cmdState == LOW ? 0 : 1);
     cmdState = digitalRead(PIN_CMD);
   }
 

@@ -82,6 +82,7 @@ it can be used anywhere, as it's recognized as an HID joystick in Windows thanks
 * [TM1637TinyDisplay](https://github.com/jasonacox/TM1637TinyDisplay)
 * [ArduinoJoystickLibrary](https://github.com/MHeironimus/ArduinoJoystickLibrary)
 * [NewEncoder](https://github.com/gfvalvo/NewEncoder)
+* [ResponsiveAnalogRead](https://github.com/dxinteractive/ResponsiveAnalogRead)
 
 ## License
 

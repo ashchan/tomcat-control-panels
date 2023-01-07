@@ -56,7 +56,7 @@ Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. Thi
 
 * Flightpanels [DCS-BIOS Arduino Library](https://github.com/DCSFlightpanels/dcs-bios-arduino-library)
 * [ArduinoJoystickLibrary](https://github.com/MHeironimus/ArduinoJoystickLibrary)
-* [NewEncoder](https://github.com/gfvalvo/NewEncoder)
+* [ResponsiveAnalogRead](https://github.com/dxinteractive/ResponsiveAnalogRead)
 
 ## License
 
