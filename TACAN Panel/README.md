@@ -18,7 +18,7 @@ TACAN Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller 
 The TACAN panel size will be:
 
 * width: **5.75** (146.1mm)
-* height: **7.375** (66.68mm)
+* height: **2.625** (66.68mm)
 
 ![Panel Design](assets/design.png)
 
