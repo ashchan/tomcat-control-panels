@@ -80,7 +80,7 @@ void checkButtons() {
 
 void updateLED() {
   // Shift register feeds 8 LEDs QA - QH (15, 1-7)
-  byte b = (B10000000 >> hudMode) | (B100 >> steerMode);
+  byte b = (B10000000 >> (hudMode - 1)) | (B100 >> (steerMode - 1));
   digitalWrite(PIN_SHIFT_LATCH, LOW);
   shiftOut(PIN_SHIFT_SER, PIN_SHIFT_CLK, LSBFIRST, b);
   digitalWrite(PIN_SHIFT_LATCH, HIGH);
