@@ -3,7 +3,7 @@
 ## Parts
 
 * 5V/16MHz Pro Micro Board w/ ATmega32U4
-* 7 custom dual LED push buttons
+* 9 push buttons w/ LED
 
 ## Design
 
