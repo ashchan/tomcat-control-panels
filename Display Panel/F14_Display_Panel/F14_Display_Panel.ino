@@ -61,11 +61,15 @@ static LadderButtonConfig steerModeButtonConfig(
 static uint8_t hudMode = 1, steerMode = 2; // 1 - 5
 
 void handleHudModeEvent(AceButton* button, uint8_t eventType, uint8_t buttonState) {
-  switchHudMode(button->getPin() + 1);
+  if (eventType == AceButton::kEventPressed) {
+    switchHudMode(button->getPin() + 1);
+  }
 }
 
 void handleSteerModeEvent(AceButton* button, uint8_t eventType, uint8_t buttonState) {
-  switchSteerMode(button->getPin() + 1);
+  if (eventType == AceButton::kEventPressed) {
+    switchSteerMode(button->getPin() + 1);
+  }
 }
 
 void checkButtons() {
