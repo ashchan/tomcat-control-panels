@@ -99,10 +99,20 @@ void loop() {
     funcState = func;
   }
 
-  // TODO: handle initial tensState
-  if (tensPot.hasChanged()) {  
-    int tens = (1023 - analogRead(PIN_TENS)) / (1024 / 13 + 1);
+  if (tensPot.hasChanged()) {
+    // NOTE: this is not generic. Need to adjust based on Pot/Switch type, value range and setup
+    int tens = 0;
+    int value = analogRead(PIN_TENS);
+    if (value < 100) {
+      tens = 12;
+    } else if (value < 1000) {
+      tens = map(1023 - value, 0, 970, 1, 12);
+    }
+
     if (tens != tensState) {
+      char arg[2];
+      itoa(tens, arg, 10);
+      sendDcsBiosMessage("PLT_TACAN_DIAL_TENS", arg);
       if (tens > tensState) {
         joystick.pressButton(10);
       } else {
@@ -117,9 +127,11 @@ void loop() {
     isTensTurning = false;
   }
 
-// TODO: handle initial onesState
   int ones = (1023 - analogRead(PIN_ONES)) / (1024 / 10 + 1);
   if (ones != onesState) {
+    char arg[2];
+    itoa(ones, arg, 10);
+    sendDcsBiosMessage("PLT_TACAN_DIAL_ONES", arg);
     if (ones > onesState) {
       joystick.pressButton(12);
     } else {
