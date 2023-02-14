@@ -11,6 +11,8 @@ Simplified AN/ARC-182 (V/UHF 2)Radio Control Panel for DCS F-14B Tomcat. Built w
 
 ## Design
 
+![arc-182 in DCS](assets/arc-182.jpg)
+
 The size of this simplified ARC-182 Radio Panel is:
 
 * width: **5.75** (14.61cm)

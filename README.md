@@ -12,6 +12,14 @@ These control panels are built with Arduino compatible microcontroller board Pro
 
 ![TACAN](TACAN%20Panel/assets/tacan.jpg)
 
+### [AN/ARC-182 VUHF Control Panel](ARC-182%20Radio%20Panel/)
+
+![arc-182 in DCS](ARC-182%20Radio%20Panel/assets/arc-182.jpg)
+
+### [AFCS Panel](AFCS%20Panel/)
+
+### [Display Panel](Display%20Panel/)
+
 ### [AoA Indexer](AoA%20Indexer/)
 
 ![AoA Indexer](AoA%20Indexer/assets/aoa.jpg)
