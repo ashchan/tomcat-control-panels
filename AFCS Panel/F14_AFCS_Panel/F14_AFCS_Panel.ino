@@ -106,6 +106,18 @@ void updateLED() {
   digitalWrite(PIN_LED_GT, hdg == 0 ? HIGH : LOW);
 }
 
+void clearLED() {
+  digitalWrite(PIN_LED_PITCH, LOW);
+  digitalWrite(PIN_LED_ROLL, LOW);
+  digitalWrite(PIN_LED_YAW, LOW);
+  digitalWrite(PIN_LED_VEC, LOW);
+  digitalWrite(PIN_LED_ACL, LOW);
+  digitalWrite(PIN_LED_ALT, LOW);
+  digitalWrite(PIN_LED_HDG, LOW);
+  digitalWrite(PIN_LED_GT, LOW);
+  digitalWrite(PIN_LED_ENGAGE, LOW);
+}
+
 DcsBios::ActionButton pltAfcsPitchToggle("PLT_AFCS_PITCH", "TOGGLE", PIN_PITCH);
 DcsBios::ActionButton pltAfcsRollToggle("PLT_AFCS_ROLL", "TOGGLE", PIN_ROLL);
 DcsBios::ActionButton pltAfcsYawToggle("PLT_AFCS_YAW", "TOGGLE", PIN_YAW);
@@ -132,6 +144,11 @@ void onPltAutopltEngageChange(unsigned int newValue) {
   engage = newValue;
 }
 DcsBios::IntegerBuffer pltAutopltEngageBuffer(0x1210, 0x0040, 6, onPltAutopltEngageChange);
+
+void onAcftNameChange(char* newValue) {
+   clearLED();
+}
+DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
 
 void setup() {
   Serial.begin(9600);

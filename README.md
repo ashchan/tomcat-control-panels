@@ -18,6 +18,8 @@ These control panels are built with Arduino compatible microcontroller board Pro
 
 ### [AFCS Panel](AFCS%20Panel/)
 
+![afcs in DCS](AFCS%20Panel/assets/afcs.jpg)
+
 ### [Display Panel](Display%20Panel/)
 
 ### [AoA Indexer](AoA%20Indexer/)
