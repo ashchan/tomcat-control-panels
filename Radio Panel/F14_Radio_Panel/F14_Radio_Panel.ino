@@ -165,10 +165,16 @@ void onF5UhfFreqChange(unsigned int newValue) {
 DcsBios::IntegerBuffer uhfFreqBuffer(0x768e, 0x6000, 13, onF5UhfFreqChange);
 
 //-----------------------------------------------------------------------------
+// Common
+void onAcftNameChange(char* newValue) {
+  led.clear();
+}
+DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
+
+//-----------------------------------------------------------------------------
 // Main loop
 void setup() {
   DcsBios::setup();
-  Serial.begin(9600);
 
   chanSelEncoder.begin();
   pinMode(TUNE, INPUT_PULLUP);
@@ -184,8 +190,14 @@ void setup() {
   joystick.begin();
 }
 
+unsigned long lastMilli = 0;
+
 void loop() {
   DcsBios::loop();
+
+  if (millis() - lastMilli < 40) {
+    return;
+  }
 
   volPot.update();
   brtPot.update();
@@ -282,5 +294,5 @@ void loop() {
     }
   }
 
-  delay(40);
+  lastMilli = millis();
 }

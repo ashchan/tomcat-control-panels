@@ -40,6 +40,11 @@ void onF14PltVuhfRemoteDispChange(char* value) {
 }
 DcsBios::StringBuffer<7> pltVuhfRemoteDispBuffer(0x1482, onF14PltVuhfRemoteDispChange);
 
+void onAcftNameChange(char* newValue) {
+  led.clearDisplay(0);
+}
+DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
+
 long val110 = 0;
 long val1 = 0;
 long val01 = 0;
@@ -50,7 +55,6 @@ unsigned long lastMilli = 0;
 
 void setup() {
   DcsBios::setup();
-  Serial.begin(9600);
 
   led.shutdown(0, false);
   led.setIntensity(0, 8);

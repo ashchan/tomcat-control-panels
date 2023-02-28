@@ -33,6 +33,8 @@ int crsState = -1;
 bool isCrsTurning = false;
 int cmdState = LOW;
 
+unsigned long lastMilli = 0;
+
 Joystick_ joystick(0x08, JOYSTICK_TYPE_JOYSTICK, JOYSTICK_DEFAULT_BUTTON_COUNT,
   0, true, true, false, false, false, false, false, false, false, false, false);
 ResponsiveAnalogRead tensPot(PIN_TENS, true);
@@ -44,10 +46,14 @@ DcsBios::LED pltTacanComandNfo(0x12d2, 0x1000, PIN_LED_CMD_NFO);
 DcsBios::LED pltTacanBit(0x12d4, 0x0020, PIN_LED_GO);
 DcsBios::LED pltTacanNogo(0x12d4, 0x0040, PIN_LED_NOGO);
 
+void onAcftNameChange(char* newValue) {
+  digitalWrite(PIN_LED_CMD_PLT, LOW);
+  digitalWrite(PIN_LED_CMD_NFO, LOW);
+}
+DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
+
 void setup() {
   DcsBios::setup();
-
-  Serial.begin(9600);
 
   pinMode(PIN_BIT, INPUT_PULLUP);
   pinMode(PIN_MODE, INPUT_PULLUP);
@@ -59,6 +65,11 @@ void setup() {
 
 void loop() {
   DcsBios::loop();
+
+  if (millis() - lastMilli < 40) {
+    return;
+  }
+
   tensPot.update();
   volPot.update();
   crsPot.update();
@@ -187,5 +198,5 @@ void loop() {
     cmdState = digitalRead(PIN_CMD);
   }
 
-  delay(40);
+  lastMilli = millis();
 }

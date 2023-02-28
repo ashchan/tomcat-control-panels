@@ -94,6 +94,16 @@ void updateLED() {
   digitalWrite(PIN_LED_TACAN_MAN, steerMode == 5 ? HIGH : LOW);
 }
 
+void clearLED() {
+  digitalWrite(PIN_SHIFT_LATCH, LOW);
+  shiftOut(PIN_SHIFT_SER, PIN_SHIFT_CLK, LSBFIRST, B00000000);
+  digitalWrite(PIN_SHIFT_LATCH, HIGH);
+
+  // Two more LEDs from Pro Micro
+  digitalWrite(PIN_LED_TACAN_VEC, LOW);
+  digitalWrite(PIN_LED_TACAN_MAN, LOW);
+}
+
 void switchHudMode(uint8_t mode) {
   switch (mode) {
     case 1:
@@ -156,9 +166,12 @@ void onPltSteerModeChange(char* newValue) {
 }
 DcsBios::StringBuffer<1> pltSteerModeBuffer(0x148c, onPltSteerModeChange);
 
-void setup() {
-  Serial.begin(9600);
+void onAcftNameChange(char* newValue) {
+  clearLED();
+}
+DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
 
+void setup() {
   pinMode(PIN_HUD_MODE, INPUT);
   pinMode(PIN_STEER_MODE, INPUT);
   pinMode(PIN_SHIFT_SER, OUTPUT);
