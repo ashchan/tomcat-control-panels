@@ -42,11 +42,10 @@ void onAcftNameChange(char* newValue) {
 }
 DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
 
-void loop() {
-  DcsBios::loop();
-}
-
 void setup() {
   DcsBios::setup();
-  Serial.begin(9600);
+}
+
+void loop() {
+  DcsBios::loop();
 }
