@@ -41,7 +41,9 @@ void onF14PltVuhfRemoteDispChange(char* value) {
 DcsBios::StringBuffer<7> pltVuhfRemoteDispBuffer(0x1482, onF14PltVuhfRemoteDispChange);
 
 void onAcftNameChange(char* newValue) {
-  led.clearDisplay(0);
+  if (String(newValue) == "") {
+    led.clearDisplay(0);
+  }
 }
 DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
 

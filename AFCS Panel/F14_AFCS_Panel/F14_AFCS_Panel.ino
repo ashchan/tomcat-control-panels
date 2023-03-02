@@ -146,13 +146,13 @@ void onPltAutopltEngageChange(unsigned int newValue) {
 DcsBios::IntegerBuffer pltAutopltEngageBuffer(0x1210, 0x0040, 6, onPltAutopltEngageChange);
 
 void onAcftNameChange(char* newValue) {
-   clearLED();
+  if (String(newValue) == "") {
+    clearLED();
+  }
 }
 DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
 
 void setup() {
-  Serial.begin(9600);
-
   pinMode(PIN_LED_VEC, OUTPUT);
   pinMode(PIN_LED_ACL, OUTPUT);
   pinMode(PIN_LED_HDG, OUTPUT);

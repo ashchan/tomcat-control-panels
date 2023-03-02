@@ -47,8 +47,10 @@ DcsBios::LED pltTacanBit(0x12d4, 0x0020, PIN_LED_GO);
 DcsBios::LED pltTacanNogo(0x12d4, 0x0040, PIN_LED_NOGO);
 
 void onAcftNameChange(char* newValue) {
-  digitalWrite(PIN_LED_CMD_PLT, LOW);
-  digitalWrite(PIN_LED_CMD_NFO, LOW);
+  if (String(newValue) == "") {
+    digitalWrite(PIN_LED_CMD_PLT, LOW);
+    digitalWrite(PIN_LED_CMD_NFO, LOW);
+  }
 }
 DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
 

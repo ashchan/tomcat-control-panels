@@ -167,7 +167,9 @@ void onPltSteerModeChange(char* newValue) {
 DcsBios::StringBuffer<1> pltSteerModeBuffer(0x148c, onPltSteerModeChange);
 
 void onAcftNameChange(char* newValue) {
-  clearLED();
+  if (String(newValue) == "") {
+    clearLED();
+  }
 }
 DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
 

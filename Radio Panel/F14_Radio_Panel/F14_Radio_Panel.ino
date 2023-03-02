@@ -167,7 +167,9 @@ DcsBios::IntegerBuffer uhfFreqBuffer(0x768e, 0x6000, 13, onF5UhfFreqChange);
 //-----------------------------------------------------------------------------
 // Common
 void onAcftNameChange(char* newValue) {
-  led.clear();
+  if (String(newValue) == "") {
+    led.clear();
+  }
 }
 DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
 

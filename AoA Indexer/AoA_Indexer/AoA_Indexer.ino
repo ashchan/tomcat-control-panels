@@ -38,7 +38,9 @@ void clear() {
 }
 
 void onAcftNameChange(char* newValue) {
-  clear();
+  if (String(newValue) == "") {
+    clear();
+  }
 }
 DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
 
