@@ -91,35 +91,35 @@ void loop() {
     valMode = mode;
   }
 
-  int32_t value110 = dial110.read();
+  int32_t value110 = dial110.read() >> 2;
   if (value110 != val110) {
     sendDcsBiosMessage("RIO_VUHF_110_DIAL", value110 > val110 ? "2" : "0");
     sendDcsBiosMessage("RIO_VUHF_110_DIAL", "1");
     val110 = value110;
   }
 
-  long value1 = dial1.read();
+  long value1 = dial1.read() >> 2;
   if (value1 != val1) {
     sendDcsBiosMessage("RIO_VUHF_1_DIAL", value1 > val1 ? "2" : "0");
     sendDcsBiosMessage("RIO_VUHF_1_DIAL", "1");
     val1 = value1;
   }
 
-  long value01 = dial01.read();
+  long value01 = dial01.read() >> 2;
   if (value01 != val01) {
     sendDcsBiosMessage("RIO_VUHF_01_DIAL", value01 > val01 ? "2" : "0");
     sendDcsBiosMessage("RIO_VUHF_01_DIAL", "1");
     val01 = value01;
   }
 
-  long value025 = dial025.read();
+  long value025 = dial025.read() >> 2;
   if (value025 != val025) {
     sendDcsBiosMessage("RIO_VUHF_025_DIAL", value025 > val025 ? "2" : "0");
     sendDcsBiosMessage("RIO_VUHF_025_DIAL", "1");
     val025 = value025;
   }
 
-  long valueChan = chan.read();
+  long valueChan = chan.read() >> 2;
   if (valueChan != valChan) {
     sendDcsBiosMessage("RIO_VUHF_PRESETS", valueChan > valChan ? "INC" : "DEC");
     valChan = valueChan;
