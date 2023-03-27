@@ -72,7 +72,6 @@ int freqSwitchState(int value) {
 
 //-----------------------------------------------------------------------------
 // F-14B
-bool f14PilotSeat = true;
 void f14ShowFreq(char* value) {
   if (value[3] == '.') {
     float preq = (value[0] - '0') * 100 + (value[1] - '0') * 10 + (value[2] - '0') + (float)(value[4] - '0') * 0.1 + (float)(value[5] - '0') * 0.01 + (float)(value[6] - '0') * 0.001;
@@ -91,18 +90,9 @@ void onF14PltUhf1BrightnessChange(unsigned int newValue) {
 DcsBios::IntegerBuffer pltUhf1BrightnessBuffer(0x1246, 0xffff, 0, onF14PltUhf1BrightnessChange);
 
 void onF14PltUhfRemoteDispChange(char* newValue) {
-  if (f14PilotSeat) {
-    f14ShowFreq(newValue);
-  }
+  f14ShowFreq(newValue);
 }
 DcsBios::StringBuffer<7> pltUhfRemoteDispBuffer(0x1472, onF14PltUhfRemoteDispChange);
-
-void onF14PltVuhfRemoteDispChange(char* newValue) {
-  if (!f14PilotSeat) {
-    f14ShowFreq(newValue);
-  }
-}
-DcsBios::StringBuffer<7> pltVuhfRemoteDispBuffer(0x1482, onF14PltVuhfRemoteDispChange);
 
 //-----------------------------------------------------------------------------
 // F-5E
@@ -187,7 +177,7 @@ void setup() {
 
   led.setBrightness(BRIGHT_3);
   led.clear();
-  led.showString("   -_-");
+  led.showString("  F-14");
 
   joystick.begin();
 }
@@ -272,9 +262,6 @@ void loop() {
   handleRotarySwitch(MODE_SEL, MODE_SEL_INDEX, 3, 15);
   handleRotarySwitch(FUNC_SEL, FUNC_SEL_INDEX, 4, 18);
 
-  if (digitalRead(MISC) != lastControlState[MISC] && lastControlState[MISC] == LOW) {
-    f14PilotSeat = !f14PilotSeat;
-  }
   handleSimpleButton(MISC, 26);
 
   // A0 - A3
