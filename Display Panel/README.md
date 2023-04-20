@@ -6,6 +6,8 @@
 * 8 on-off switches
 * 1 on-off-on switch
 * 10 custom push buttons with LED
+* 74HC595 shift register to expand outputs (LEDs)
+* 74HC165 shift registers to expand inputs (Buttons)
 
 ## Design
 
@@ -15,7 +17,6 @@
 ## Arduino Libraries
 
 * Flightpanels [DCS-BIOS Arduino Library](https://github.com/DCSFlightpanels/dcs-bios-arduino-library)
-* [AceButton](https://github.com/bxparks/AceButton)
 
 ## License
 

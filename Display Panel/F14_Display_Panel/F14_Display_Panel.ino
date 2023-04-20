@@ -1,8 +1,6 @@
 #define DCSBIOS_DEFAULT_SERIAL
 
 #include <DcsBios.h>
-#include <AceButton.h>
-using namespace ace_button;
 
 #define PIN_HUD_DECLUTTER   0
 #define PIN_HUD_MODE_AWL    1
@@ -14,80 +12,63 @@ using namespace ace_button;
 #define PIN_VDI_PW_SW       7
 #define PIN_HUD_PW_SW       8
 #define PIN_HSD_PW_SW       9
-#define PIN_SHIFT_SER       14
-#define PIN_SHIFT_LATCH     15
-#define PIN_SHIFT_CLK       16
+#define PIN_BTN_SHIFT_DATA  10
+#define PIN_BTN_SHIFT_CLK   18
+#define PIN_BTN_SHIFT_LOAD  19
+#define PIN_LED_SHIFT_SER   14
+#define PIN_LED_SHIFT_LATCH 15
+#define PIN_LED_SHIFT_CLK   16
 #define PIN_LED_TACAN_VEC   20
 #define PIN_LED_TACAN_MAN   21
-#define PIN_HUD_MODE        A0
-#define PIN_STEER_MODE      A1
 
-static const uint8_t NUM_LADDER_BUTTONS = 5;
-static const uint16_t LADDER_LEVELS[NUM_LADDER_BUTTONS + 1] = {
-  0,
-  180,
-  480,
-  760,
-  900,
-  1023,
-};
-
-static AceButton b0(nullptr, 0);
-static AceButton b1(nullptr, 1);
-static AceButton b2(nullptr, 2);
-static AceButton b3(nullptr, 3);
-static AceButton b4(nullptr, 4);
-static AceButton* const HUD_MODE_BUTTONS[NUM_LADDER_BUTTONS] = {
-  &b0, &b1, &b2, &b3, &b4,
-};
-
-static LadderButtonConfig hudModeButtonConfig(
-  PIN_HUD_MODE, NUM_LADDER_BUTTONS + 1, LADDER_LEVELS, NUM_LADDER_BUTTONS, HUD_MODE_BUTTONS
-);
-
-static AceButton b5(nullptr, 0);
-static AceButton b6(nullptr, 1);
-static AceButton b7(nullptr, 2);
-static AceButton b8(nullptr, 3);
-static AceButton b9(nullptr, 4);
-static AceButton* const STEER_MODE_BUTTONS[NUM_LADDER_BUTTONS] = {
-  &b5, &b6, &b7, &b8, &b9,
-};
-
-static LadderButtonConfig steerModeButtonConfig(
-  PIN_STEER_MODE, NUM_LADDER_BUTTONS + 1, LADDER_LEVELS, NUM_LADDER_BUTTONS, STEER_MODE_BUTTONS
-);
-
-static uint8_t hudMode = 1, steerMode = 2; // 1 - 5
-
-void handleHudModeEvent(AceButton* button, uint8_t eventType, uint8_t buttonState) {
-  if (eventType == AceButton::kEventPressed) {
-    switchHudMode(button->getPin() + 1);
+uint8_t binaryToMode(uint8_t value) {
+  if (value == B11111011) {
+    return 2;
   }
-}
-
-void handleSteerModeEvent(AceButton* button, uint8_t eventType, uint8_t buttonState) {
-  if (eventType == AceButton::kEventPressed) {
-    switchSteerMode(button->getPin() + 1);
+  if (value == B11111101) {
+    return 3;
   }
+  if (value == B11111110) {
+    return 4;
+  }
+  if (value == B01111111) {
+    return 5;
+  }
+
+  return 1;
 }
 
 void checkButtons() {
   static unsigned long prev = millis();
   unsigned long now = millis();
-  if (now - prev > 5) {
-    hudModeButtonConfig.checkButtons();
-    steerModeButtonConfig.checkButtons();
-    prev = now;
+  if (now - prev < 40) {
+    return;
   }
+
+  digitalWrite(PIN_BTN_SHIFT_CLK, HIGH);
+  digitalWrite(PIN_BTN_SHIFT_LOAD, HIGH);
+  uint8_t hud = shiftIn(PIN_BTN_SHIFT_DATA, PIN_BTN_SHIFT_CLK, MSBFIRST);
+  uint8_t steer = shiftIn(PIN_BTN_SHIFT_DATA, PIN_BTN_SHIFT_CLK, MSBFIRST);
+  digitalWrite(PIN_BTN_SHIFT_LOAD, LOW); 
+
+  if (hud != B11111111) {
+    switchHudMode(binaryToMode(hud));
+  }
+  if (steer != B11111111) {
+    switchSteerMode(binaryToMode(steer));
+  }
+
+  prev = now;
 }
+
+static uint8_t hudMode = 1, steerMode = 2; // 1 - 5
 
 void updateLED() {
   // Shift register feeds 8 LEDs QA - QH (15, 1-7)
   byte b = (B10000000 >> (hudMode - 1)) | (B100 >> (steerMode - 1));
-  digitalWrite(PIN_SHIFT_LATCH, LOW);
-  shiftOut(PIN_SHIFT_SER, PIN_SHIFT_CLK, LSBFIRST, b);
-  digitalWrite(PIN_SHIFT_LATCH, HIGH);
+  digitalWrite(PIN_LED_SHIFT_LATCH, LOW);
+  shiftOut(PIN_LED_SHIFT_SER, PIN_LED_SHIFT_CLK, LSBFIRST, b);
+  digitalWrite(PIN_LED_SHIFT_LATCH, HIGH);
 
   // Two more LEDs from Pro Micro
   digitalWrite(PIN_LED_TACAN_VEC, steerMode == 4 ? HIGH : LOW);
@@ -95,9 +76,9 @@ void updateLED() {
 }
 
 void clearLED() {
-  digitalWrite(PIN_SHIFT_LATCH, LOW);
-  shiftOut(PIN_SHIFT_SER, PIN_SHIFT_CLK, LSBFIRST, B00000000);
-  digitalWrite(PIN_SHIFT_LATCH, HIGH);
+  digitalWrite(PIN_LED_SHIFT_LATCH, LOW);
+  shiftOut(PIN_LED_SHIFT_SER, PIN_LED_SHIFT_CLK, LSBFIRST, B00000000);
+  digitalWrite(PIN_LED_SHIFT_LATCH, HIGH);
 
   // Two more LEDs from Pro Micro
   digitalWrite(PIN_LED_TACAN_VEC, LOW);
@@ -105,6 +86,10 @@ void clearLED() {
 }
 
 void switchHudMode(uint8_t mode) {
+  if (mode == hudMode) {
+    return;
+  }
+  hudMode = mode;
   switch (mode) {
     case 1:
       sendDcsBiosMessage("PLT_HUD_MODE_TAKEOFF", "1");
@@ -125,6 +110,10 @@ void switchHudMode(uint8_t mode) {
 }
 
 void switchSteerMode(uint8_t mode) {
+  if (mode == steerMode) {
+    return;
+  }
+  steerMode = mode;
   switch (mode) {
     case 1:
       sendDcsBiosMessage("PLT_NAV_STEER_TACAN", "1");
@@ -174,18 +163,16 @@ void onAcftNameChange(char* newValue) {
 DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
 
 void setup() {
-  pinMode(PIN_HUD_MODE, INPUT);
-  pinMode(PIN_STEER_MODE, INPUT);
-  pinMode(PIN_SHIFT_SER, OUTPUT);
-  pinMode(PIN_SHIFT_LATCH, OUTPUT);
-  pinMode(PIN_SHIFT_CLK, OUTPUT);
+  Serial.begin(9600); 
+
+  pinMode(PIN_BTN_SHIFT_DATA, INPUT);
+  pinMode(PIN_BTN_SHIFT_CLK, OUTPUT);
+  pinMode(PIN_BTN_SHIFT_LOAD, OUTPUT);
+  pinMode(PIN_LED_SHIFT_SER, OUTPUT);
+  pinMode(PIN_LED_SHIFT_LATCH, OUTPUT);
+  pinMode(PIN_LED_SHIFT_CLK, OUTPUT);
   pinMode(PIN_LED_TACAN_VEC, OUTPUT);
   pinMode(PIN_LED_TACAN_MAN, OUTPUT);
-
-  hudModeButtonConfig.setEventHandler(handleHudModeEvent);
-  hudModeButtonConfig.setFeature(ButtonConfig::kFeatureClick);
-  steerModeButtonConfig.setEventHandler(handleSteerModeEvent);
-  steerModeButtonConfig.setFeature(ButtonConfig::kFeatureClick);
 
   DcsBios::setup();
 }
