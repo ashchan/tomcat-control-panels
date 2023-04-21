@@ -24,7 +24,7 @@ The TACAN panel size will be:
 
 I design the panel using FreeCAD. It consists of three layers. The bottom and middle layers are composed and 3D printed as a single object.
 
-For the top layer I yet have to find a way to make it. Not owning a laser or CNC engraver, this needs more experiments and ideas.
+The top layer is either 3D printed then covered with a labels(legends) layer, or cut and engraved with a laser engraver.
 
 Note the hole diameters are determined by looking at switches, buttons and encoders I have. They are likely to not fit for others.
 
