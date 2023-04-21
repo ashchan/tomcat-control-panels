@@ -22,6 +22,8 @@ These control panels are built with Arduino compatible microcontroller board Pro
 
 ### [Display Panel](Display%20Panel/)
 
+![display in DCS](Display%20Panel/assets/display.jpg)
+
 ### [AoA Indexer](AoA%20Indexer/)
 
 ![AoA Indexer](AoA%20Indexer/assets/aoa.jpg)

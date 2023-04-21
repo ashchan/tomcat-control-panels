@@ -14,6 +14,8 @@
 * width: **5.75** (14.61cm)
 * height: **7.5** (19.05cm)
 
+![display in DCS](assets/display.jpg)
+
 ## Arduino Libraries
 
 * Flightpanels [DCS-BIOS Arduino Library](https://github.com/DCSFlightpanels/dcs-bios-arduino-library)
