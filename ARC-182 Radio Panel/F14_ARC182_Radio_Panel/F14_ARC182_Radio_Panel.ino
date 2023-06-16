@@ -19,6 +19,33 @@ Encoder chan(14, 15);
 // 8-digit, only the middle 6 are used.
 LedControl led = LedControl(4, 5, 16, 1);
 
+long val110 = 0;
+long val1 = 0;
+long val01 = 0;
+long val025 = 0;
+long valChan = 0;
+long valMode = MODE_NULL;
+unsigned long lastMilli = 0;
+
+long currentMode() {
+  long manual = digitalRead(19);
+  long guard = digitalRead(20);
+  long preset = digitalRead(21);
+  if (manual == LOW) {
+    return MODE_MANUAL;
+  } else if (guard == LOW) {
+    return MODE_GUARD;
+  }
+  return MODE_PRESET;
+}
+
+void setCurrentMode(long mode) {
+  char arg[2];
+  itoa(mode, arg, 10);
+  sendDcsBiosMessage("RIO_VUHF_FREQ_MODE", arg);
+  valMode = mode;
+}
+
 void onF14PltVuhfRemoteDispChange(char* value) {
   led.clearDisplay(0);
   if (value[3] == '.') {
@@ -43,17 +70,19 @@ DcsBios::StringBuffer<7> pltVuhfRemoteDispBuffer(0x1482, onF14PltVuhfRemoteDispC
 void onAcftNameChange(char* newValue) {
   if (String(newValue) == "") {
     led.clearDisplay(0);
+  } else {
+    // Trigger mode change to force update
+    long mode = valMode;
+    if (mode == MODE_GUARD || mode == MODE_MANUAL) {
+      setCurrentMode(MODE_PRESET);
+    } else {
+      setCurrentMode(MODE_MANUAL);
+    }
+    delay(100);
+    setCurrentMode(mode);
   }
 }
 DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
-
-long val110 = 0;
-long val1 = 0;
-long val01 = 0;
-long val025 = 0;
-long valChan = 0;
-long valMode = MODE_NULL;
-unsigned long lastMilli = 0;
 
 void setup() {
   DcsBios::setup();
@@ -74,16 +103,7 @@ void loop() {
     return;
   }
 
-  long manual = digitalRead(19);
-  long guard = digitalRead(20);
-  long preset = digitalRead(21);
-
-  long mode = MODE_PRESET;
-  if (manual == LOW) {
-    mode = MODE_MANUAL;
-  } else if (guard == LOW) {
-    mode = MODE_GUARD;
-  }
+  long mode = currentMode();
   if (mode != valMode) {
     char arg[2];
     itoa(mode, arg, 10);
