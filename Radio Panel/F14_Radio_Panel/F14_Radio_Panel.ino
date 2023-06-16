@@ -8,7 +8,7 @@
 
 #define CHAN_SEL_CLK 0
 #define CHAN_SEL_DT 1
-#define TUNE 2
+#define TONE 2
 #define LOAD 3
 #define VOL A6
 #define VOL_INDEX 4
@@ -159,6 +159,15 @@ DcsBios::IntegerBuffer uhfFreqBuffer(0x768e, 0x6000, 13, onF5UhfFreqChange);
 void onAcftNameChange(char* newValue) {
   if (String(newValue) == "") {
     led.clear();
+  } else {
+    // Trigger change to force update display
+    int mode = analogRead(MODE_SEL) / (1024 / 3 + 1);
+    char arg[2];
+    itoa((mode + 1) % 3, arg, 10);
+    sendDcsBiosMessage("PLT_UHF1_FREQ_MODE", arg);
+    delay(200);
+    itoa(mode, arg, 10);
+    sendDcsBiosMessage("PLT_UHF1_FREQ_MODE", arg);
   }
 }
 DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
@@ -169,7 +178,7 @@ void setup() {
   DcsBios::setup();
 
   chanSelEncoder.begin();
-  pinMode(TUNE, INPUT_PULLUP);
+  pinMode(TONE, INPUT_PULLUP);
   pinMode(LOAD, INPUT_PULLUP);
   pinMode(SQL, INPUT_PULLUP);
   pinMode(READ, INPUT_PULLUP);
@@ -206,7 +215,7 @@ void loop() {
     isChanSelTurning = false;
   }
 
-  handleSimpleButton(TUNE, 10, true);
+  handleSimpleButton(TONE, 10, true);
   handleSimpleButton(LOAD, 11, true);
 
   if (volPot.hasChanged()) {

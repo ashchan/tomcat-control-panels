@@ -45,7 +45,7 @@ Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. Thi
 |:-----:|----------------------|------------------------|:---------------------:|---------------------------|
 | 0/RX1 | Chan Sel             | Rotary Encoder 0 CLK   |          BTN8         | Rotate CW                 |
 | 1/TX0 | Chan Sel             | Rotary Encoder 0 DT    |          BTN9         | Rotate CCW                |
-|   2   | Tune                 | Push Button 0          |         BTN10         |                           |
+|   2   | Tone                 | Push Button 0          |         BTN10         |                           |
 |   3   | Load                 | Push Button 1          |         BTN11         |                           |
 |  4/A6 | VOL                  | Potentiometer 0        | Axis0/X, BTN22, BTN23 | BTNs for Rotate CW/CCW    |
 |   5   | SQL                  | On-Off Toggle Switch 0 |      BTN12, BTN13     | Off needed as well *1     |
