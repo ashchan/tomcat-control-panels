@@ -50,6 +50,8 @@ void onAcftNameChange(char* newValue) {
   if (String(newValue) == "") {
     digitalWrite(PIN_LED_CMD_PLT, LOW);
     digitalWrite(PIN_LED_CMD_NFO, LOW);
+  } else {
+    digitalWrite(PIN_LED_CMD_PLT, HIGH);
   }
 }
 DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
@@ -83,9 +85,11 @@ void loop() {
 
   if (digitalRead(PIN_MODE) != modeState) {
     if (digitalRead(PIN_MODE) == HIGH) {
+      sendDcsBiosMessage("PLT_TACAN_MODE_NORMAL_INV", "DEC");
       joystick.setButton(1, 1);
       joystick.setButton(2, 0);
     } else {
+      sendDcsBiosMessage("PLT_TACAN_MODE_NORMAL_INV", "INC");
       joystick.setButton(1, 0);
       joystick.setButton(2, 1);
     }
