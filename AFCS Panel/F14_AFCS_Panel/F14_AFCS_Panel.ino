@@ -1,7 +1,7 @@
 #define DCSBIOS_DEFAULT_SERIAL
 
 #include <DcsBios.h>
-#include <AceButton.h>
+#include <AceButton.h> // 1.9.2
 using namespace ace_button;
 
 #define PIN_PITCH       1
@@ -148,6 +148,14 @@ DcsBios::IntegerBuffer pltAutopltEngageBuffer(0x1210, 0x0040, 6, onPltAutopltEng
 void onAcftNameChange(char* newValue) {
   if (String(newValue) == "") {
     clearLED();
+  } else {
+    sendDcsBiosMessage("PLT_AFCS_PITCH", "0");
+    sendDcsBiosMessage("PLT_AFCS_ROLL", "0");
+    sendDcsBiosMessage("PLT_AFCS_YAW", "0");
+    delay(200);
+    sendDcsBiosMessage("PLT_AFCS_PITCH", "1");
+    sendDcsBiosMessage("PLT_AFCS_ROLL", "1");
+    sendDcsBiosMessage("PLT_AFCS_YAW", "1");
   }
 }
 DcsBios::StringBuffer<24> AcftNameBuffer(0x0000, onAcftNameChange);
