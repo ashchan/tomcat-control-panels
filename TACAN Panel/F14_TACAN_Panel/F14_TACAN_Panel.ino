@@ -11,7 +11,7 @@
 #define PIN_TENS      A1
 #define PIN_ONES      A2
 #define PIN_VOL       A3
-#define PIN_CRS       A9
+#define PIN_CRS       A7
 #define PIN_CMD       10
 
 #define PIN_LED_CMD_PLT   7
