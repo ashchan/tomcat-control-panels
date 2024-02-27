@@ -10,7 +10,7 @@
 #define MODE_PRESET   3
 #define MODE_NULL     -1
 
-Encoder dial110(1, 0);
+Encoder dial110(1, 6);
 Encoder dial1(2, 3);
 Encoder dial01(7, 8);
 Encoder dial025(9, 10);
