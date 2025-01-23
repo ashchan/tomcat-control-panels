@@ -11,6 +11,10 @@ TACAN Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller 
 * 1 EC18AGB20401 encoder(16 pos) for channel selector tens
 * 1 rotary switch(12 pos) for channel selector ones
 * 1 RD901F B10K potentiometer for VOL
+* Straw rod, diameter about 6mm, length 45mm. Used as the Ones rotary switch shaft extension. Cut off about 5mm from the rotary switch shaft.
+* 4 M3x30 screws for the wheel cover install
+* 6 M3x6 screws for the front panel install and dual switch box install
+* 10 M3x4 heat set inserts
 
 ## Design
 
