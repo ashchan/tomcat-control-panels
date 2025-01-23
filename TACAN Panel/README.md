@@ -5,11 +5,12 @@ TACAN Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller 
 ## Parts
 
 * 5V/16MHz Pro Micro Board w/ ATmega32U4
-* 2 5mm LED for BIT result (GO/NO GO lights)
-* 2 toggle switches for operation mode and channel (X/Y)
-* 1 push button for BIT
-* 2 potentiometer for channel selector tens and VOL
+* 2 5mm LEDs (Green and Yellow) for BIT result (GO/NO GO lights)
+* 2 On-On toggle switches for operation mode and channel (X/Y)
+* 1 7mm momentary push button for BIT
+* 1 EC18AGB20401 encoder(16 pos) for channel selector tens
 * 1 rotary switch(12 pos) for channel selector ones
+* 1 RD901F B10K potentiometer for VOL
 
 ## Design
 
