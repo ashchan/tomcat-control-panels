@@ -7,7 +7,7 @@ AN/ARC-159(V) 1 UHF Control Panel for DCS F-14B Tomcat. Built with Arduino compa
 * 5V/16MHz Pro Micro Board w/ ATmega32U4
 * TM1637 6-Digit 7-Segment LED
 * Mini toggle switches:
-  * 4 (on)-off-(on) for freqency dials
+  * 4 (on)-off-(on) for frequency dials
   * 1 on-off for SQL
   * 1 (on)-off for READ
 * 2 potentiometers for VOL and BRT
