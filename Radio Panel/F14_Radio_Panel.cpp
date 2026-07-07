@@ -1,5 +1,7 @@
 #define DCSBIOS_DEFAULT_SERIAL
+#define DCSBIOS_DISABLE_SERVO
 
+#include <Arduino.h>
 #include <DcsBios.h>
 #include <TM1637TinyDisplay6.h>
 #include <Joystick.h>

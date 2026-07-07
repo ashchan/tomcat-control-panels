@@ -92,6 +92,17 @@ it can be used anywhere if the Mega 2560 is paired with a USB HID solution that 
 * [NewEncoder](https://github.com/gfvalvo/NewEncoder)
 * [ResponsiveAnalogRead](https://github.com/dxinteractive/ResponsiveAnalogRead)
 
+## PlatformIO
+
+The panel folder is also a PlatformIO project. The default environment targets the Mega 2560 Pro Mini:
+
+```sh
+cd "Radio Panel"
+pio run
+```
+
+The Mega 2560 environment still needs a Mega-compatible USB HID backend before joystick inputs can compile and enumerate as a Windows joystick.
+
 ## License
 
 Available under MIT license.
