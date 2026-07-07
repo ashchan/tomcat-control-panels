@@ -1,6 +1,6 @@
 # F-14B Tomcat ARC-159 Radio Panel
 
-AN/ARC-159(V) 1 UHF Control Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller board Mega 2560 Pro Mini, use with [Flightpanel DCS-BIOS fork](https://github.com/DCSFlightpanels/dcs-bios).
+AN/ARC-159(V) 1 UHF Control Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller board Mega 2560 Pro Mini, use with [DCS-Skunkworks DCS-BIOS fork](https://github.com/DCS-Skunkworks/dcs-bios).
 
 ## Parts
 
@@ -86,7 +86,7 @@ it can be used anywhere if the Mega 2560 is paired with a USB HID solution that 
 
 ## Arduino Libraries
 
-* Flightpanels [DCS-BIOS Arduino Library](https://github.com/DCSFlightpanels/dcs-bios-arduino-library)
+* [DCS-Skunkworks DCS-BIOS Arduino Library](https://github.com/DCS-Skunkworks/dcs-bios)
 * [TM1637TinyDisplay](https://github.com/jasonacox/TM1637TinyDisplay)
 * [ArduinoJoystickLibrary](https://github.com/MHeironimus/ArduinoJoystickLibrary)
 * [NewEncoder](https://github.com/gfvalvo/NewEncoder)
