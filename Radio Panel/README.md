@@ -1,10 +1,10 @@
 # F-14B Tomcat ARC-159 Radio Panel
 
-AN/ARC-159(V) 1 UHF Control Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller board Pro Micro, use with [Flightpanel DCS-BIOS fork](https://github.com/DCSFlightpanels/dcs-bios).
+AN/ARC-159(V) 1 UHF Control Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller board Mega 2560 Pro Mini, use with [Flightpanel DCS-BIOS fork](https://github.com/DCSFlightpanels/dcs-bios).
 
 ## Parts
 
-* 5V/16MHz Pro Micro Board w/ ATmega32U4
+* Mega 2560 Pro Mini Board
 * TM1637 6-Digit 7-Segment LED
 * Mini toggle switches:
   * 4 (on)-off-(on) for frequency dials
@@ -34,32 +34,40 @@ Note the hole diameters are determined by looking at switches, buttons and encod
 
 ![Panel CAD](assets/cad.png)
 
-## Pro Micro PINs Usage
+## Mega 2560 Pro Mini PINs Usage
 
-Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. This radio control panel will have 26 Joystick buttons and 2 axes as inputs, and 1 TM1637 LED as output. To connect them all without shift register, I'll use resistors to add simple voltage dividers to these:
+Mega 2560 Pro Mini has enough digital PINs to connect each throw of the (On)-Off-(On) toggle switches and rotary switches directly. The sketch uses `INPUT_PULLUP`, so each switch contact should connect the selected PIN to ground.
 
-* Freq (On)-Off-(On) Switches: use a single analog PIN instead of 2 digital PINs.
-* Mode and Function Selector Rotary Switches: use a single analog PIN instead of 3 or 4 digital PINs.
+This radio control panel has 26 joystick buttons and 2 axes as inputs, and 1 TM1637 LED as output. Note that unlike a Pro Micro, a Mega 2560 does not provide native USB HID by itself; keeping the joystick input behavior requires a Mega-compatible HID path such as MegaJoy, HoodLoader2, or another USB HID bridge.
 
 |  PIN  | ARC-159 Function     | Button/Switch          |  Joystick Button/Axis | Note                      |
 |:-----:|----------------------|------------------------|:---------------------:|---------------------------|
-| 0/RX1 | Chan Sel             | Rotary Encoder 0 CLK   |          BTN8         | Rotate CW                 |
-| 1/TX0 | Chan Sel             | Rotary Encoder 0 DT    |          BTN9         | Rotate CCW                |
-|   2   | Tone                 | Push Button 0          |         BTN10         |                           |
-|   3   | Load                 | Push Button 1          |         BTN11         |                           |
-|  4/A6 | VOL                  | Potentiometer 0        | Axis0/X, BTN22, BTN23 | BTNs for Rotate CW/CCW    |
-|   5   | SQL                  | On-Off Toggle Switch 0 |      BTN12, BTN13     | Off needed as well *1     |
-|  6/A7 | BRT                  | Potentiometer 1        | Axis1/Y, BTN24, BTN25 | BTNs for Rotate CW/CCW *2 |
-|   7   | Read                 | (On)-Off Switch 0      |         BTN14         |                           |
-|  8/A8 | Mode Selector        | Rotary Switch 0        |      BTN15-BTN17      | 3 Pos, voltage divider    |
-|  9/A9 | Function Selector    | Rotary Switch 1        |      BTN18-BTN21      | 4 Pos, voltage divider    |
+|   2   | Chan Sel             | Rotary Encoder 0 CLK   |          BTN8         | Rotate CW                 |
+|   3   | Chan Sel             | Rotary Encoder 0 DT    |          BTN9         | Rotate CCW                |
+|   4   | Freq LED             | TM1637 LED DIO         |           ❌          | DCS BIOS Output           |
+|   5   | Freq LED             | TM1637 LED CLK         |           ❌          | ″                         |
+|   6   | Tone                 | Push Button 0          |         BTN10         |                           |
+|   7   | Load                 | Push Button 1          |         BTN11         |                           |
+|   8   | SQL                  | On-Off Toggle Switch 0 |      BTN12, BTN13     | Off needed as well *1     |
+|   9   | Read                 | (On)-Off Switch 0      |         BTN14         |                           |
 |   10  | ❌                   | Rotary Encoder 0 SW    |         BTN26         | Misc button *3            |
-|   A0  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 |       BTN0, BTN1      | Up/Down, voltage divider  |
-|   A1  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 |       BTN2, BTN3      | ″                         |
-|   A2  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 |       BTN4, BTN5      | ″                         |
-|   A3  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 |       BTN6, BTN7      | ″                         |
-|   14  | Freq LED             | TM1637 LED DIO         |           ❌          | DCS BIOS Output           |
-|   15  | Freq LED             | TM1637 LED CLK         |           ❌          | ″                         |
+|   A0  | VOL                  | Potentiometer 0        | Axis0/X, BTN22, BTN23 | BTNs for Rotate CW/CCW    |
+|   A1  | BRT                  | Potentiometer 1        | Axis1/Y, BTN24, BTN25 | BTNs for Rotate CW/CCW *2 |
+|   22  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 |          BTN0         | Up contact                |
+|   23  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 |          BTN1         | Down contact              |
+|   24  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 |          BTN2         | Up contact                |
+|   25  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 |          BTN3         | Down contact              |
+|   26  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 |          BTN4         | Up contact                |
+|   27  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 |          BTN5         | Down contact              |
+|   28  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 |          BTN6         | Up contact                |
+|   29  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 |          BTN7         | Down contact              |
+|   30  | Mode Selector        | Rotary Switch 0        |         BTN15         | Position 0                |
+|   31  | Mode Selector        | Rotary Switch 0        |         BTN16         | Position 1                |
+|   32  | Mode Selector        | Rotary Switch 0        |         BTN17         | Position 2                |
+|   33  | Function Selector    | Rotary Switch 1        |         BTN18         | Position 0                |
+|   34  | Function Selector    | Rotary Switch 1        |         BTN19         | Position 1                |
+|   35  | Function Selector    | Rotary Switch 1        |         BTN20         | Position 2                |
+|   36  | Function Selector    | Rotary Switch 1        |         BTN21         | Position 3                |
 
 * *1: DCS needs separate keybinds for On and Off. For F-14B ARC-159 Squelch, it has `Squelch SQL`, `Squelch OFF` and `Squelch Toggle`. The first two will be used.
 * *2: DCS doesn't have axis binding for `VOL`/`BRT` knobs; Create two buttons for `CW`/`CCW` similar to rotary encoder.
@@ -70,7 +78,7 @@ Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. Thi
 This radio control panel works in DCS-BIOS/HID Hybrid mode.
 
 1. Inputs: All switches, buttons and rotary encoders are mapped directly in DCS or other simulators. Although this panel is designed and modeled to look like ARC-159,
-it can be used anywhere, as it's recognized as an HID joystick in Windows thanks to the ATmega32U4 chip on Pro Micro.
+it can be used anywhere if the Mega 2560 is paired with a USB HID solution that exposes the inputs as a joystick in Windows.
 1. Outputs: The TM1637 LED interfaces with DCS-BIOS to display DCS Radio channel or frequency based on mode. When in F-14B Rio seat, it will display the AN/ARC-182 info as well. Currently these modules are supported:
   * F-14B Front Seat
   * F-14B Back Seat (RIO)
