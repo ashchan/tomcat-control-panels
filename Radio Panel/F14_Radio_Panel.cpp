@@ -44,8 +44,8 @@ int lastReadState = -1;
 int lastMiscState = HIGH;
 int lastVolState = -1;
 int lastBrtState = -1;
-int lastModeState = -1;
-int lastFuncState = -1;
+int lastModeState[3] = {HIGH, HIGH, HIGH};
+int lastFuncState[4] = {HIGH, HIGH, HIGH, HIGH};
 bool isChanSelTurning = false;
 bool isVolTurning = false;
 bool isBrtTurning = false;
@@ -59,28 +59,6 @@ void handleSimpleButton(int pin, int joystickButton, int* lastState, bool revert
   int state = digitalRead(pin);
   if (state != *lastState) {
     joystick.setButton(joystickButton, state == (revertValue ? HIGH : LOW) ? 1 : 0);
-    *lastState = state;
-  }
-}
-
-int readDigitalRotarySwitch(const byte pins[], int positions) {
-  for (int index = 0; index < positions; index++) {
-    if (digitalRead(pins[index]) == LOW) {
-      return index;
-    }
-  }
-  return -1;
-}
-
-void handleRotarySwitch(const byte pins[], int positions, int joystickButtonStart, int* lastState) {
-  int state = readDigitalRotarySwitch(pins, positions);
-  if (state != *lastState) {
-    if (*lastState >= 0) {
-      joystick.releaseButton(joystickButtonStart + *lastState);
-    }
-    if (state >= 0) {
-      joystick.pressButton(joystickButtonStart + state);
-    }
     *lastState = state;
   }
 }
@@ -126,9 +104,12 @@ void onAcftNameChange(char* newValue) {
     led.clear();
   } else {
     // Trigger change to force update display
-    int mode = readDigitalRotarySwitch(MODE_SEL_PINS, 3);
-    if (mode < 0) {
-      mode = 0;
+    int mode = 0;
+    for (int index = 0; index < 3; index++) {
+      if (digitalRead(MODE_SEL_PINS[index]) == LOW) {
+        mode = index;
+        break;
+      }
     }
     char arg[2];
     itoa((mode + 1) % 3, arg, 10);
@@ -245,8 +226,12 @@ void loop() {
   handleSimpleButton(TONE, 10, &lastToneState, true);
   handleSimpleButton(LOAD, 11, &lastLoadState, true);
   handleSimpleButton(READ, 14, &lastReadState);
-  handleRotarySwitch(MODE_SEL_PINS, 3, 15, &lastModeState);
-  handleRotarySwitch(FUNC_SEL_PINS, 4, 18, &lastFuncState);
+  for (int index = 0; index < 3; index++) {
+    handleSimpleButton(MODE_SEL_PINS[index], 15 + index, &lastModeState[index]);
+  }
+  for (int index = 0; index < 4; index++) {
+    handleSimpleButton(FUNC_SEL_PINS[index], 18 + index, &lastFuncState[index]);
+  }
 
   handleSimpleButton(MISC, 26, &lastMiscState);
 
