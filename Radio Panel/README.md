@@ -82,8 +82,6 @@ This radio control panel works in DCS-BIOS mode.
 
 * [DCS-Skunkworks DCS-BIOS Arduino Library](https://github.com/DCS-Skunkworks/dcs-bios)
 * [TM1637TinyDisplay](https://github.com/jasonacox/TM1637TinyDisplay)
-* [NewEncoder](https://github.com/gfvalvo/NewEncoder)
-* [ResponsiveAnalogRead](https://github.com/dxinteractive/ResponsiveAnalogRead)
 
 ## PlatformIO
 
