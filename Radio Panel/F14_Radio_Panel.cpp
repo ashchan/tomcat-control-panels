@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <DcsBios.h>
 #include <TM1637TinyDisplay6.h>
-#include <Joystick.h>
 #include <ResponsiveAnalogRead.h>
 #include <NewEncoder.h>
 
@@ -29,37 +28,54 @@ const byte FREQ_SWITCH_PINS[4][2] = {
 
 const byte MODE_SEL_PINS[3] = {30, 31, 32};
 const byte FUNC_SEL_PINS[4] = {33, 34, 35, 36};
+const char* FREQ_DIAL_CONTROLS[4] = {
+  "PLT_UHF1_110_DIAL",
+  "PLT_UHF1_1_DIAL",
+  "PLT_UHF1_01_DIAL",
+  "PLT_UHF1_025_DIAL",
+};
 
 NewEncoder chanSelEncoder(CHAN_SEL_CLK, CHAN_SEL_DT, -20, 20, 0, FULL_PULSE);
 ResponsiveAnalogRead volPot(VOL, true);
 ResponsiveAnalogRead brtPot(BRT, true);
 TM1637TinyDisplay6 led(LED_CLK, LED_DIO);
-Joystick_ joystick(0x07, JOYSTICK_TYPE_JOYSTICK, JOYSTICK_DEFAULT_BUTTON_COUNT,
-  0, true, true, false, false, false, false, false, false, false, false, false);
 
 int lastToneState = HIGH;
 int lastLoadState = HIGH;
 int lastSqlState = -1;
 int lastReadState = -1;
 int lastMiscState = HIGH;
-int lastVolState = -1;
-int lastBrtState = -1;
 int lastModeState[3] = {HIGH, HIGH, HIGH};
 int lastFuncState[4] = {HIGH, HIGH, HIGH, HIGH};
-bool isChanSelTurning = false;
-bool isVolTurning = false;
-bool isBrtTurning = false;
 
 #define FREQ_SWITCH_STATE_UP    1
 #define FREQ_SWITCH_STATE_OFF   2
 #define FREQ_SWITCH_STATE_DOWN  3
 int lastFreqSwitchState[4] = {FREQ_SWITCH_STATE_OFF, FREQ_SWITCH_STATE_OFF, FREQ_SWITCH_STATE_OFF, FREQ_SWITCH_STATE_OFF};
 
-void handleSimpleButton(int pin, int joystickButton, int* lastState, bool revertValue = false) {
+void sendValue(const char* control, unsigned int value) {
+  char arg[7];
+  utoa(value, arg, 10);
+  sendDcsBiosMessage(control, arg);
+}
+
+void handleSimpleSwitch(const char* control, int pin, int* lastState, bool revertValue = false) {
   int state = digitalRead(pin);
   if (state != *lastState) {
-    joystick.setButton(joystickButton, state == (revertValue ? HIGH : LOW) ? 1 : 0);
+    sendDcsBiosMessage(control, state == (revertValue ? HIGH : LOW) ? "1" : "0");
     *lastState = state;
+  }
+}
+
+void handleMultiPositionSwitch(const char* control, const byte pins[], int positions, int lastState[]) {
+  for (int index = 0; index < positions; index++) {
+    int state = digitalRead(pins[index]);
+    if (state != lastState[index]) {
+      if (state == LOW) {
+        sendValue(control, index);
+      }
+      lastState[index] = state;
+    }
   }
 }
 
@@ -146,8 +162,6 @@ void setup() {
   led.setBrightness(BRIGHT_3);
   led.clear();
   led.showString("  F-14");
-
-  joystick.begin();
 }
 
 unsigned long lastMilli = 0;
@@ -163,92 +177,40 @@ void loop() {
   brtPot.update();
 
   if (chanSelEncoder.upClick()) {
-    joystick.pressButton(8);
-    isChanSelTurning = true;
+    sendDcsBiosMessage("PLT_UHF1_PRESETS", "INC");
   } else if (chanSelEncoder.downClick()) {
-    joystick.pressButton(9);
-    isChanSelTurning = true;
-  } else if (isChanSelTurning) {
-    joystick.releaseButton(8);
-    joystick.releaseButton(9);
-    isChanSelTurning = false;
+    sendDcsBiosMessage("PLT_UHF1_PRESETS", "DEC");
   }
 
   if (volPot.hasChanged()) {
-    int vol = volPot.getValue();
-    joystick.setXAxis(vol);
-    int lastPulse = map(lastVolState, 0, 1023, 0, 20);
-    int pulse = map(vol, 0, 1023, 0, 20);
-    if (pulse > lastPulse) {
-      joystick.pressButton(22);
-      isVolTurning = true;
-    } else if (pulse < lastPulse) {
-      joystick.pressButton(23);
-      isVolTurning = true;
-    }
-    lastVolState = vol;
-  } else if (isVolTurning) {
-    joystick.releaseButton(22);
-    joystick.releaseButton(23);
-    isVolTurning = false;
+    sendValue("PLT_UHF1_VOL", map(volPot.getValue(), 0, 1023, 0, 65535));
   }
 
   if (lastSqlState != digitalRead(SQL)) {
-    if (digitalRead(SQL) == LOW) {
-      joystick.setButton(12, 1);
-      joystick.setButton(13, 0);
-    } else {
-      joystick.setButton(12, 0);
-      joystick.setButton(13, 1);
-    }
+    sendDcsBiosMessage("PLT_UHF1_SQUELCH", digitalRead(SQL) == LOW ? "1" : "0");
     lastSqlState = digitalRead(SQL);
   }
 
   if (brtPot.hasChanged()) {
-    int brt = brtPot.getValue();
-    joystick.setYAxis(brt);
-    int lastPulse = map(lastBrtState, 0, 1023, 0, 20);
-    int pulse = map(brt, 0, 1023, 0, 20);
-    if (pulse > lastPulse) {
-      joystick.pressButton(24);
-      isBrtTurning = true;
-    } else if (pulse < lastPulse) {
-      joystick.pressButton(25);
-      isBrtTurning = true;
-    }
-    lastBrtState = brt;
-  } else if (isBrtTurning) {
-    joystick.releaseButton(24);
-    joystick.releaseButton(25);
-    isBrtTurning = false;
+    sendValue("PLT_UHF1_BRIGHTNESS", map(brtPot.getValue(), 0, 1023, 0, 65535));
   }
 
-  handleSimpleButton(TONE, 10, &lastToneState, true);
-  handleSimpleButton(LOAD, 11, &lastLoadState, true);
-  handleSimpleButton(READ, 14, &lastReadState);
-  for (int index = 0; index < 3; index++) {
-    handleSimpleButton(MODE_SEL_PINS[index], 15 + index, &lastModeState[index]);
-  }
-  for (int index = 0; index < 4; index++) {
-    handleSimpleButton(FUNC_SEL_PINS[index], 18 + index, &lastFuncState[index]);
-  }
+  handleSimpleSwitch("PLT_UHF1_TONE", TONE, &lastToneState, true);
+  handleSimpleSwitch("PLT_UHF1_LOAD", LOAD, &lastLoadState, true);
+  handleSimpleSwitch("PLT_UHF1_SHOW_PRESET_FREQ", READ, &lastReadState);
+  handleMultiPositionSwitch("PLT_UHF1_FREQ_MODE", MODE_SEL_PINS, 3, lastModeState);
+  handleMultiPositionSwitch("PLT_UHF1_FUNCTION", FUNC_SEL_PINS, 4, lastFuncState);
 
-  handleSimpleButton(MISC, 26, &lastMiscState);
+  handleSimpleSwitch("PLT_UHF_DISPLAY_TEST", MISC, &lastMiscState);
 
   for (int index = 0; index < 4; index++) {
     int state = freqSwitchState(index);
     if (state != lastFreqSwitchState[index]) {
-      int joystickButton = index * 2;
-      int joystickValue = 1;
-      if (state == FREQ_SWITCH_STATE_OFF) {
-        joystickValue = 0;
-        if (lastFreqSwitchState[index] == FREQ_SWITCH_STATE_DOWN) {
-          joystickButton = index * 2 + 1;
-        }
+      if (state == FREQ_SWITCH_STATE_UP) {
+        sendDcsBiosMessage(FREQ_DIAL_CONTROLS[index], "INC");
       } else if (state == FREQ_SWITCH_STATE_DOWN) {
-        joystickButton = index * 2 + 1;
+        sendDcsBiosMessage(FREQ_DIAL_CONTROLS[index], "DEC");
       }
-      joystick.setButton(joystickButton, joystickValue);
       lastFreqSwitchState[index] = state;
     }
   }
