@@ -1,10 +1,10 @@
 # F-14B Tomcat ARC-159 Radio Panel
 
-AN/ARC-159(V) 1 UHF Control Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller board Pro Micro, use with [Flightpanel DCS-BIOS fork](https://github.com/DCSFlightpanels/dcs-bios).
+AN/ARC-159(V) 1 UHF Control Panel for DCS F-14B Tomcat. Built with Arduino compatible microcontroller board Mega 2560 Pro Mini, use with [DCS-Skunkworks DCS-BIOS fork](https://github.com/DCS-Skunkworks/dcs-bios).
 
 ## Parts
 
-* 5V/16MHz Pro Micro Board w/ ATmega32U4
+* Mega 2560 Pro Mini Board
 * TM1637 6-Digit 7-Segment LED
 * Mini toggle switches:
   * 4 (on)-off-(on) for frequency dials
@@ -34,55 +34,63 @@ Note the hole diameters are determined by looking at switches, buttons and encod
 
 ![Panel CAD](assets/cad.png)
 
-## Pro Micro PINs Usage
+## Mega 2560 Pro Mini PINs Usage
 
-Pro Micro has 18 digital PINs, 9 of which can also be used as analog inputs. This radio control panel will have 26 Joystick buttons and 2 axes as inputs, and 1 TM1637 LED as output. To connect them all without shift register, I'll use resistors to add simple voltage dividers to these:
+Mega 2560 Pro Mini has enough digital PINs to connect each throw of the (On)-Off-(On) toggle switches and rotary switches directly. The sketch uses `INPUT_PULLUP`, so each switch contact should connect the selected PIN to ground. Inputs are sent directly to DCS-BIOS instead of enumerating as a USB joystick.
 
-* Freq (On)-Off-(On) Switches: use a single analog PIN instead of 2 digital PINs.
-* Mode and Function Selector Rotary Switches: use a single analog PIN instead of 3 or 4 digital PINs.
+|  PIN  | ARC-159 Function     | Button/Switch          | DCS-BIOS Control              | Note                      |
+|:-----:|----------------------|------------------------|-------------------------------|---------------------------|
+|   2   | Chan Sel             | Rotary Encoder 0 CLK   | `PLT_UHF1_PRESETS`            | INC                       |
+|   3   | Chan Sel             | Rotary Encoder 0 DT    | `PLT_UHF1_PRESETS`            | DEC                       |
+|   4   | Freq LED             | TM1637 LED DIO         | DCS-BIOS Output               |                           |
+|   5   | Freq LED             | TM1637 LED CLK         | DCS-BIOS Output               |                           |
+|   6   | Tone                 | Push Button 0          | `PLT_UHF1_TONE`               |                           |
+|   7   | Load                 | Push Button 1          | `PLT_UHF1_LOAD`               |                           |
+|   8   | SQL                  | On-Off Toggle Switch 0 | `PLT_UHF1_SQUELCH`            |                           |
+|   9   | Read                 | (On)-Off Switch 0      | `PLT_UHF1_SHOW_PRESET_FREQ`   |                           |
+|   10  | ❌                   | Rotary Encoder 0 SW    | `PLT_UHF_DISPLAY_TEST`        | Misc button *1            |
+|   A0  | VOL                  | Potentiometer 0        | `PLT_UHF1_VOL`                |                           |
+|   A1  | BRT                  | Potentiometer 1        | `PLT_UHF1_BRIGHTNESS`         |                           |
+|   11  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 | `PLT_UHF1_110_DIAL`           | INC                       |
+|   12  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 | `PLT_UHF1_110_DIAL`           | DEC                       |
+|   13  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 | `PLT_UHF1_1_DIAL`             | INC                       |
+|   14  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 | `PLT_UHF1_1_DIAL`             | DEC                       |
+|   15  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 | `PLT_UHF1_01_DIAL`            | INC                       |
+|   16  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 | `PLT_UHF1_01_DIAL`            | DEC                       |
+|   17  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 | `PLT_UHF1_025_DIAL`           | INC                       |
+|   18  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 | `PLT_UHF1_025_DIAL`           | DEC                       |
+|   19  | Mode Selector        | Rotary Switch 0        | `PLT_UHF1_FREQ_MODE`          | Position 0                |
+|   20  | Mode Selector        | Rotary Switch 0        | `PLT_UHF1_FREQ_MODE`          | Position 1                |
+|   21  | Mode Selector        | Rotary Switch 0        | `PLT_UHF1_FREQ_MODE`          | Position 2                |
+|   22  | Function Selector    | Rotary Switch 1        | `PLT_UHF1_FUNCTION`           | Position 0                |
+|   23  | Function Selector    | Rotary Switch 1        | `PLT_UHF1_FUNCTION`           | Position 1                |
+|   24  | Function Selector    | Rotary Switch 1        | `PLT_UHF1_FUNCTION`           | Position 2                |
+|   25  | Function Selector    | Rotary Switch 1        | `PLT_UHF1_FUNCTION`           | Position 3                |
 
-|  PIN  | ARC-159 Function     | Button/Switch          |  Joystick Button/Axis | Note                      |
-|:-----:|----------------------|------------------------|:---------------------:|---------------------------|
-| 0/RX1 | Chan Sel             | Rotary Encoder 0 CLK   |          BTN8         | Rotate CW                 |
-| 1/TX0 | Chan Sel             | Rotary Encoder 0 DT    |          BTN9         | Rotate CCW                |
-|   2   | Tone                 | Push Button 0          |         BTN10         |                           |
-|   3   | Load                 | Push Button 1          |         BTN11         |                           |
-|  4/A6 | VOL                  | Potentiometer 0        | Axis0/X, BTN22, BTN23 | BTNs for Rotate CW/CCW    |
-|   5   | SQL                  | On-Off Toggle Switch 0 |      BTN12, BTN13     | Off needed as well *1     |
-|  6/A7 | BRT                  | Potentiometer 1        | Axis1/Y, BTN24, BTN25 | BTNs for Rotate CW/CCW *2 |
-|   7   | Read                 | (On)-Off Switch 0      |         BTN14         |                           |
-|  8/A8 | Mode Selector        | Rotary Switch 0        |      BTN15-BTN17      | 3 Pos, voltage divider    |
-|  9/A9 | Function Selector    | Rotary Switch 1        |      BTN18-BTN21      | 4 Pos, voltage divider    |
-|   10  | ❌                   | Rotary Encoder 0 SW    |         BTN26         | Misc button *3            |
-|   A0  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 |       BTN0, BTN1      | Up/Down, voltage divider  |
-|   A1  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 |       BTN2, BTN3      | ″                         |
-|   A2  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 |       BTN4, BTN5      | ″                         |
-|   A3  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 |       BTN6, BTN7      | ″                         |
-|   14  | Freq LED             | TM1637 LED DIO         |           ❌          | DCS BIOS Output           |
-|   15  | Freq LED             | TM1637 LED CLK         |           ❌          | ″                         |
+* *1: F-14B Radio Panel doesn't have a center push button on the CHAN SEL knob; the rotary encoder button is mapped to display test as a useful spare input.
 
-* *1: DCS needs separate keybinds for On and Off. For F-14B ARC-159 Squelch, it has `Squelch SQL`, `Squelch OFF` and `Squelch Toggle`. The first two will be used.
-* *2: DCS doesn't have axis binding for `VOL`/`BRT` knobs; Create two buttons for `CW`/`CCW` similar to rotary encoder.
-* *3: F-14B Radio Panel doesn't have a center push button on the CHAN SEL knob; Creating one for rotary encoder's button could be useful, say, to reset the panel to initial state.
+## DCS-BIOS
 
-## DCS-BIOS / HID Hybrid
+This radio control panel works in DCS-BIOS mode.
 
-This radio control panel works in DCS-BIOS/HID Hybrid mode.
-
-1. Inputs: All switches, buttons and rotary encoders are mapped directly in DCS or other simulators. Although this panel is designed and modeled to look like ARC-159,
-it can be used anywhere, as it's recognized as an HID joystick in Windows thanks to the ATmega32U4 chip on Pro Micro.
-1. Outputs: The TM1637 LED interfaces with DCS-BIOS to display DCS Radio channel or frequency based on mode. When in F-14B Rio seat, it will display the AN/ARC-182 info as well. Currently these modules are supported:
+1. Inputs: All switches, buttons and rotary encoders send F-14B ARC-159 DCS-BIOS control messages.
+1. Outputs: The TM1637 LED interfaces with DCS-BIOS to display F-14B radio channel or frequency based on mode. When in F-14B Rio seat, it will display the AN/ARC-182 info as well. Currently these F-14B seats are supported:
   * F-14B Front Seat
   * F-14B Back Seat (RIO)
-  * F-5E
 
 ## Arduino Libraries
 
-* Flightpanels [DCS-BIOS Arduino Library](https://github.com/DCSFlightpanels/dcs-bios-arduino-library)
+* [DCS-Skunkworks DCS-BIOS Arduino Library](https://github.com/DCS-Skunkworks/dcs-bios)
 * [TM1637TinyDisplay](https://github.com/jasonacox/TM1637TinyDisplay)
-* [ArduinoJoystickLibrary](https://github.com/MHeironimus/ArduinoJoystickLibrary)
-* [NewEncoder](https://github.com/gfvalvo/NewEncoder)
-* [ResponsiveAnalogRead](https://github.com/dxinteractive/ResponsiveAnalogRead)
+
+## PlatformIO
+
+The panel folder is also a PlatformIO project. The default environment targets the Mega 2560 Pro Mini:
+
+```sh
+cd "Radio Panel"
+pio run
+```
 
 ## License
 
