@@ -18,23 +18,25 @@
 #define BRT A1
 
 const byte FREQ_SWITCH_PINS[4][2] = {
-  {22, 23},
-  {24, 25},
-  {26, 27},
-  {28, 29},
+  {11, 12},
+  {13, 14},
+  {15, 16},
+  {17, 18},
 };
 
-const byte MODE_SEL_PINS[3] = {30, 31, 32};
-const byte FUNC_SEL_PINS[4] = {33, 34, 35, 36};
+const byte MODE_SEL_PINS[3] = {19, 20, 21};
+const byte FUNC_SEL_PINS[4] = {22, 23, 24, 25};
 
-DcsBios::RotaryEncoder chanSelEncoder("PLT_UHF1_PRESETS", "DEC", "INC", CHAN_SEL_CLK, CHAN_SEL_DT);
+typedef DcsBios::PotentiometerEWMA<5, 256, 5> PanelPotentiometer;
+
+DcsBios::RotaryEncoder chanSelEncoder("PLT_UHF1_PRESETS", "INC", "DEC", CHAN_SEL_CLK, CHAN_SEL_DT);
 DcsBios::Switch2Pos toneSwitch("PLT_UHF1_TONE", TONE);
 DcsBios::Switch2Pos loadSwitch("PLT_UHF1_LOAD", LOAD);
 DcsBios::Switch2Pos squelchSwitch("PLT_UHF1_SQUELCH", SQL);
 DcsBios::Switch2Pos readSwitch("PLT_UHF1_SHOW_PRESET_FREQ", READ);
 DcsBios::Switch2Pos displayTestSwitch("PLT_UHF_DISPLAY_TEST", MISC);
-DcsBios::Potentiometer volPot("PLT_UHF1_VOL", VOL);
-DcsBios::Potentiometer brtPot("PLT_UHF1_BRIGHTNESS", BRT);
+PanelPotentiometer volPot("PLT_UHF1_VOL", VOL, true);
+PanelPotentiometer brtPot("PLT_UHF1_BRIGHTNESS", BRT, true);
 DcsBios::SwitchMultiPos modeSelector("PLT_UHF1_FREQ_MODE", MODE_SEL_PINS, 3);
 DcsBios::SwitchMultiPos functionSelector("PLT_UHF1_FUNCTION", FUNC_SEL_PINS, 4);
 DcsBios::ActionButton freq10MhzInc("PLT_UHF1_110_DIAL", "INC", FREQ_SWITCH_PINS[0][0]);

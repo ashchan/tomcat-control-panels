@@ -51,21 +51,21 @@ Mega 2560 Pro Mini has enough digital PINs to connect each throw of the (On)-Off
 |   10  | ❌                   | Rotary Encoder 0 SW    | `PLT_UHF_DISPLAY_TEST`        | Misc button *1            |
 |   A0  | VOL                  | Potentiometer 0        | `PLT_UHF1_VOL`                |                           |
 |   A1  | BRT                  | Potentiometer 1        | `PLT_UHF1_BRIGHTNESS`         |                           |
-|   22  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 | `PLT_UHF1_110_DIAL`           | INC                       |
-|   23  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 | `PLT_UHF1_110_DIAL`           | DEC                       |
-|   24  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 | `PLT_UHF1_1_DIAL`             | INC                       |
-|   25  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 | `PLT_UHF1_1_DIAL`             | DEC                       |
-|   26  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 | `PLT_UHF1_01_DIAL`            | INC                       |
-|   27  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 | `PLT_UHF1_01_DIAL`            | DEC                       |
-|   28  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 | `PLT_UHF1_025_DIAL`           | INC                       |
-|   29  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 | `PLT_UHF1_025_DIAL`           | DEC                       |
-|   30  | Mode Selector        | Rotary Switch 0        | `PLT_UHF1_FREQ_MODE`          | Position 0                |
-|   31  | Mode Selector        | Rotary Switch 0        | `PLT_UHF1_FREQ_MODE`          | Position 1                |
-|   32  | Mode Selector        | Rotary Switch 0        | `PLT_UHF1_FREQ_MODE`          | Position 2                |
-|   33  | Function Selector    | Rotary Switch 1        | `PLT_UHF1_FUNCTION`           | Position 0                |
-|   34  | Function Selector    | Rotary Switch 1        | `PLT_UHF1_FUNCTION`           | Position 1                |
-|   35  | Function Selector    | Rotary Switch 1        | `PLT_UHF1_FUNCTION`           | Position 2                |
-|   36  | Function Selector    | Rotary Switch 1        | `PLT_UHF1_FUNCTION`           | Position 3                |
+|   11  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 | `PLT_UHF1_110_DIAL`           | INC                       |
+|   12  | Freq 10MHz Switch    | (On)-Off-(On) Switch 0 | `PLT_UHF1_110_DIAL`           | DEC                       |
+|   13  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 | `PLT_UHF1_1_DIAL`             | INC                       |
+|   14  | Freq 1MHz Switch     | (On)-Off-(On) Switch 1 | `PLT_UHF1_1_DIAL`             | DEC                       |
+|   15  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 | `PLT_UHF1_01_DIAL`            | INC                       |
+|   16  | Freq 0.1MHz Switch   | (On)-Off-(On) Switch 2 | `PLT_UHF1_01_DIAL`            | DEC                       |
+|   17  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 | `PLT_UHF1_025_DIAL`           | INC                       |
+|   18  | Freq 0.025MHz Switch | (On)-Off-(On) Switch 3 | `PLT_UHF1_025_DIAL`           | DEC                       |
+|   19  | Mode Selector        | Rotary Switch 0        | `PLT_UHF1_FREQ_MODE`          | Position 0                |
+|   20  | Mode Selector        | Rotary Switch 0        | `PLT_UHF1_FREQ_MODE`          | Position 1                |
+|   21  | Mode Selector        | Rotary Switch 0        | `PLT_UHF1_FREQ_MODE`          | Position 2                |
+|   22  | Function Selector    | Rotary Switch 1        | `PLT_UHF1_FUNCTION`           | Position 0                |
+|   23  | Function Selector    | Rotary Switch 1        | `PLT_UHF1_FUNCTION`           | Position 1                |
+|   24  | Function Selector    | Rotary Switch 1        | `PLT_UHF1_FUNCTION`           | Position 2                |
+|   25  | Function Selector    | Rotary Switch 1        | `PLT_UHF1_FUNCTION`           | Position 3                |
 
 * *1: F-14B Radio Panel doesn't have a center push button on the CHAN SEL knob; the rotary encoder button is mapped to display test as a useful spare input.
 
